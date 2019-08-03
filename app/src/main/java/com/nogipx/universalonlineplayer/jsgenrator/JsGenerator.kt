@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element
 abstract class JsGenerator {
 
     companion object {
-        const val GENCORE = "gen"
+        const val GENCORE = "js-gen"
         const val CSS_GEN_UNIT = "$GENCORE-unit"
     }
 

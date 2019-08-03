@@ -2,6 +2,7 @@ package com.nogipx.universalonlineplayer.activities
 
 import android.app.Activity
 import android.os.Bundle
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.nogipx.universalonlineplayer.CustomPlayerWebViewClient
@@ -12,8 +13,8 @@ import java.net.URL
 
 class FilmPlayerActivity : Activity() {
 
-    private var playerWebView: WebView? = null
-    private var playerWebViewClient: WebViewClient? = null
+    private lateinit var playerWebView: WebView
+    private lateinit var playerWebViewClient: WebViewClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,13 +57,14 @@ class FilmPlayerActivity : Activity() {
 
         playerWebViewClient = CustomPlayerWebViewClient(invokeJs = listOf(jse.generate()))
 
-        with(playerWebView!!.settings) {
+        with(playerWebView.settings) {
             javaScriptEnabled = true
             allowUniversalAccessFromFileURLs = true
             loadWithOverviewMode = true
+            cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         }
 
-        with(playerWebView!!) {
+        with(playerWebView) {
             webViewClient = playerWebViewClient
             loadUrl(pageUrl.toString())
         }

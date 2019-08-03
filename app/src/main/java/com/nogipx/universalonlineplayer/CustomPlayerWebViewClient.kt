@@ -26,7 +26,6 @@ class CustomPlayerWebViewClient(
                 {log.debug("@ Executed JS @\n${method.iife()}\n") }
             )
         }
-        invokeJs.forEach { }
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
