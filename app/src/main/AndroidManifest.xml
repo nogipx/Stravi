@@ -15,7 +15,9 @@
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activities.MyFilmsListActivity">
         </activity>
-        <activity android:name=".activities.FilmPlayerActivity">
+        <activity android:name=".activities.FilmPlayerActivity"
+                  android:configChanges="screenSize|orientation"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
