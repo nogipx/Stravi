@@ -48,13 +48,14 @@ abstract class JsGenerator {
 
     /* Utilities */
 
-    protected fun value(string: String, screen: Boolean = false) : String =
-        if (screen) """\"$string\""""
-        else "\"$string\""
+    protected fun String.vq(screen: Boolean = false) : String =
+        if (screen) """\"$this\""""
+        else "\"$this\""
 
-    protected fun wrap(string: String, screen: Boolean = false) : String =
-        if (screen) """\'$string\'"""
-        else "'$string'"
+    protected fun String.wq(screen: Boolean = false) : String =
+        if (screen) """\'$this\'"""
+        else "'$this'"
+
 
     protected fun format(string: String) : String = "`$string `"
 

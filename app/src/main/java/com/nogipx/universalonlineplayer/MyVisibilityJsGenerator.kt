@@ -43,9 +43,9 @@ class MyVisibilityJsGenerator (
 
     fun moveTargetsToBodyJS() =
         FunctionJS(code = """
-            document.querySelectorAll(${value(targetsSelector)}).forEach(
+            document.querySelectorAll(${targetsSelector.vq()}).forEach(
                 ${FunctionJS("","e", code =
-                    "document.querySelector(${value("body")}).appendChild(e);"
+                    "document.querySelector(${"body".vq()}).appendChild(e);"
                 )}
             );
         """
@@ -59,18 +59,18 @@ class MyVisibilityJsGenerator (
      */
     fun markupTargetsJS() =
         FunctionJS(code = """
-            ${value(targetsSelector)}.split(',').forEach(
+            ${targetsSelector.vq()}.split(',').forEach(
                 ${FunctionJS(args = "selector, i", code = """
                     let targets = document.querySelectorAll(selector);
                     if (targets.length === 1) {
-                        targets[0].classList.add(${value(CSS_TARGET)});
-                        targets[0].classList.add([${value(CSS_TARGET)}, i].join('-'));
+                        targets[0].classList.add(${CSS_TARGET.vq()});
+                        targets[0].classList.add([${CSS_TARGET.vq()}, i].join('-'));
                     } else {
                         targets.forEach(
                             ${FunctionJS(args = "e, j", code = """
-                                e.classList.add(${value(CSS_TARGET)});
-                                e.classList.add([${value(CSS_TARGET)}, i].join('-'));
-                                e.classList.add([${value(CSS_TARGET)}, i, j].join('-'));
+                                e.classList.add(${CSS_TARGET.vq()});
+                                e.classList.add([${CSS_TARGET.vq()}, i].join('-'));
+                                e.classList.add([${CSS_TARGET.vq()}, i, j].join('-'));
                             """)}
                         );
                     }
@@ -87,9 +87,9 @@ class MyVisibilityJsGenerator (
 
     fun commonClassTargetsJS() =
         FunctionJS(code = """
-            document.querySelectorAll(${value(".$CSS_TARGET")}).forEach(
+            document.querySelectorAll(${".$CSS_TARGET".vq()}).forEach(
                 ${FunctionJS(args = "e", code = 
-                    "e.classList.add(${value(CSS_TARGET)});"
+                    "e.classList.add(${CSS_TARGET.vq()});"
                 )}
             );
         """

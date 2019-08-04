@@ -17,16 +17,17 @@ open class VisibilityJsGenerator : JsGenerator(){
     fun injectElementJS(containerSelector: String, position: String = "beforeend",
                         element: Element, screen: Boolean = false) =
         FunctionJS(code = """
-            document.querySelector(${value(containerSelector)}).insertAdjacentHTML(
-                ${value(position)}, 
-                ${if (screen) wrap(element.toString(), true) else wrap(element.toString())}
+            document.querySelector(${containerSelector.vq()}).insertAdjacentHTML(
+                ${position.vq()}, 
+                ${ if (screen) element.toString().wq(screen = true)
+                    else element.toString().wq()}
             );
         """
     )
 
     fun removeElementsJS(selector: String) =
         FunctionJS(code = """
-            let targets = document.querySelectorAll(${value(selector)});
+            let targets = document.querySelectorAll(${selector.vq()});
             targets.forEach(
             ${FunctionJS("", "e", "e.remove()")}
             );
@@ -35,18 +36,18 @@ open class VisibilityJsGenerator : JsGenerator(){
 
     fun addClassJS(selector: String, cssClass: String) =
         FunctionJS(code = """
-            let targets = document.querySelectorAll(${value(selector)});
+            let targets = document.querySelectorAll(${selector.vq()});
             targets.forEach(
-                ${FunctionJS("", "e", "e.classList.add(${value(cssClass)})")}
+                ${FunctionJS("", "e", "e.classList.add(${cssClass.vq()})")}
             );
         """
     )
 
     fun removeClassJS(selector: String, cssClass: String) =
         FunctionJS(code = """
-            let targets = document.querySelectorAll(${value(selector)});
+            let targets = document.querySelectorAll(${selector.vq()});
             targets.forEach(
-            ${FunctionJS("", "e", "e.classList.remove(${value(cssClass)})")}
+            ${FunctionJS("", "e", "e.classList.remove(${cssClass.vq()})")}
             );
         """
     )
