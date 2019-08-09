@@ -1,4 +1,4 @@
-package com.nogipx.universalonlineplayer
+package com.nogipx.stravi
 
 import android.view.View
 import android.view.ViewGroup

@@ -1,4 +1,4 @@
-package com.nogipx.universalonlineplayer.jsgenrator
+package com.nogipx.stravi.jsgenerator
 
 import java.util.UUID.randomUUID
 

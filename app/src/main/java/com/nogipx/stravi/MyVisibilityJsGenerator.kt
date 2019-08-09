@@ -1,16 +1,14 @@
-package com.nogipx.universalonlineplayer
+package com.nogipx.stravi
 
-import com.nogipx.universalonlineplayer.jsgenrator.FunctionJS
-import com.nogipx.universalonlineplayer.jsgenrator.VisibilityJsGenerator
+import com.nogipx.stravi.jsgenerator.FunctionJS
+import com.nogipx.stravi.jsgenerator.VisibilityJsGenerator
 
 /**
  * @author https://github.com/nogipx
  */
 class MyVisibilityJsGenerator (
-    targetsSelectors: List<String> = listOf())
+    private val targetsSelector: String = "")
     : VisibilityJsGenerator() {
-
-    private val targetsSelector = targetsSelectors.joinToString()
 
     companion object {
         private const val prefix = "vis-$GENCORE"
@@ -31,6 +29,12 @@ class MyVisibilityJsGenerator (
 
 
     /* JS Applied Snippets */
+
+    fun addCSS(text: String, containerSelector: String = "head") {
+        val css = injectElementJS(containerSelector,
+            element = styleTag(text.replace("@target", ".$CSS_TARGET")))
+        generationChain.add(css)
+    }
 
     fun mobileMetaJS() =
         injectElementJS(
@@ -53,7 +57,7 @@ class MyVisibilityJsGenerator (
 
     /**
      * Makes an opportunity to styling each selected element.
-     * Selects nodes by each selector (@see[showSelector]) and sets classes.
+     * Selects nodes by each selector (@see[targetsSelector]) and sets classes.
      * Sets class like "<prefix>-target-<selector_index>" if found single node.
      * Otherwise sets "<prefix>-target-<selector_index>-<found_index>"
      */
