@@ -1,4 +1,4 @@
-package com.nogipx.universalonlineplayer.jsgenrator
+package com.nogipx.stravi.jsgenerator
 
 import org.jsoup.nodes.Element
 
@@ -8,11 +8,6 @@ import org.jsoup.nodes.Element
 open class VisibilityJsGenerator : JsGenerator(){
 
     /* JS Composition Snippets */
-
-    fun addCSS(text: String, containerSelector: String = "head") {
-        val css = injectElementJS(containerSelector, element = styleTag(text))
-        generationChain.add(css)
-    }
 
     fun injectElementJS(containerSelector: String, position: String = "beforeend",
                         element: Element, screen: Boolean = false) =

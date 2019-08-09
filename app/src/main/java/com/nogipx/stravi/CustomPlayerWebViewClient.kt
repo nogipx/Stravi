@@ -1,9 +1,9 @@
-package com.nogipx.universalonlineplayer
+package com.nogipx.stravi
 
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.nogipx.universalonlineplayer.jsgenrator.FunctionJS
+import com.nogipx.stravi.jsgenerator.FunctionJS
 import org.slf4j.LoggerFactory
 import java.net.URL
 

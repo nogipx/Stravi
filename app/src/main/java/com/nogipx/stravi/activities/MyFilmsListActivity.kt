@@ -1,8 +1,8 @@
-package com.nogipx.universalonlineplayer.activities
+package com.nogipx.stravi.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.nogipx.universalonlineplayer.R
+import com.nogipx.stravi.R
 
 class MyFilmsListActivity : AppCompatActivity() {
 
