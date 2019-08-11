@@ -8,8 +8,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.nogipx.stravi.CustomPlayerWebViewClient
-import com.nogipx.stravi.MyVisibilityJsGenerator
 import com.nogipx.stravi.R
+import com.nogipx.stravi.jsgenerator.MyVisibilityJsGenerator
 import com.nogipx.stravi.models.WebExtension
 import java.net.URL
 
@@ -20,7 +20,7 @@ class WebPageActivity : AppCompatActivity() {
     private lateinit var mWebViewClient: WebViewClient
 
     companion object {
-        const val TAG = "com.nogipx.stravi.activities.WebPageActivity"
+        private const val TAG = "activities.WebPage"
         const val EXTRA_PAGE_URL = "$TAG.PAGE_URL"
         const val EXTRA_WEB_EXTENSION_JSON = "$TAG.WEB_EXTENSION_JSON"
 
