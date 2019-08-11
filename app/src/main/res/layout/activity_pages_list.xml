@@ -5,24 +5,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.PagesListActivity">
+    tools:context=".activities.PagesListActivity"
+    android:background="@color/backgroundColor"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pagesList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/pagesList" app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0">
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pagesList_actionButton"
         android:layout_height="56dp"
         android:layout_width="56dp"
-        android:clickable="true" app:srcCompat="@drawable/ic_add_black_24dp" android:id="@+id/floatingActionButton2"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:clickable="true"
         android:focusable="true"
-        android:layout_marginEnd="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="32dp"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 

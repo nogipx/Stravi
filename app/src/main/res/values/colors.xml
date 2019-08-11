@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#5c6bc0</color>
+    <color name="colorPrimaryDark">#26418f</color>
+    <color name="colorPrimaryLight">#8e99f3</color>
+    <color name="colorSecondary">#ffc400</color>
+    <color name="colorSecondaryDark">#c79400</color>
+    <color name="colorSecondaryLight">#fff64f</color>
 
     <color name="animevostPrimary">#fde8cb</color>
-    <color name="animevostPrimaryDark">#fab259</color>
-    <color name="animevostTitles">#884900</color>
+    <color name="animevostPrimaryDark">#cab69a</color>
+    <color name="animevostTitles">#fffffe</color>
+
+    <color name="animevostPrimaryOriginal">#fde8cb</color>
+    <color name="animevostPrimaryDarkOriginal">#fab259</color>
+    <color name="animevostTitlesOriginal">#884900</color>
+
+    <color name="textBlack">#212121</color>
+
+    <color name="cardColor">#fff</color>
+    <color name="backgroundColor">#f5f5f5</color>
 </resources>
