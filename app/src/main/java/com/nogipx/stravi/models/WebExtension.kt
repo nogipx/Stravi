@@ -1,20 +1,30 @@
 package com.nogipx.stravi.models
 
-import com.google.gson.Gson
+import android.content.Context
+import com.google.gson.annotations.Expose
+import java.io.File
 
 
 data class WebExtension(
-    var name: String = "",
-    var host: String = "",
-    var css: String = "",
-    var targets: List<String> = listOf()
-) {
+    @Expose var name: String = "",
+    @Expose var id: String = "",
+    @Expose var css: String = "",
+    @Expose var targets: List<String> = listOf())
+    : InternalStorage("extensions") {
+
     companion object {
-        fun fromJson(json: String?) : WebExtension =
-            Gson().fromJson(json, WebExtension::class.java)
+        private const val TAG = "models.WebExtension"
     }
 
-    fun isEmpty() = name.isEmpty() && host.isEmpty()
+    fun save(context: Context) : File? =
+        if (isNotEmpty())
+            super.save(context, "extension_$id", toJson().toByteArray())
+        else null
 
-    fun toJson(): String = Gson().toJson(this)
+    fun delete(context: Context) =
+        super.delete(context,"extension_$id")
+
+    fun isEmpty() = name.isEmpty() && id.isEmpty()
+
+    fun isNotEmpty() = !isEmpty()
 }

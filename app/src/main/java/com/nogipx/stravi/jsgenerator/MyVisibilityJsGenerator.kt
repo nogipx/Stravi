@@ -1,7 +1,4 @@
-package com.nogipx.stravi
-
-import com.nogipx.stravi.jsgenerator.FunctionJS
-import com.nogipx.stravi.jsgenerator.VisibilityJsGenerator
+package com.nogipx.stravi.jsgenerator
 
 /**
  * @author https://github.com/nogipx

@@ -2,7 +2,6 @@ package com.nogipx.stravi
 
 import com.nogipx.stravi.models.WebExtension
 import com.nogipx.stravi.models.WebPage
-import java.net.URL
 
 val extensions = mapOf(
     "mega-mult.ru" to WebExtension("Mega-mult", "mega-mult.ru",
@@ -30,8 +29,8 @@ val extensions = mapOf(
     "animevost.club" to WebExtension("Animevost", "animevost.club")
 )
 
-val pages = listOf(
-    WebPage(URL("https://online.animedia.tv/anime/mastera-mecha-onlayn/1/1"), extensions["online.animedia.tv"]),
-    WebPage(URL("http://mega-mult.ru/serii/525-avatar-legenda-ob-aange-i-korre.html"), extensions["mega-mult.ru"]),
-    WebPage(URL("http://animevost.club/online/legenda_o_grankreste_2018_720_hd/28-1-0-564"), extensions["animevost.club"])
+val pages = mutableListOf(
+    WebPage("https://online.animedia.tv/anime/mastera-mecha-onlayn/1/1"),
+    WebPage("http://mega-mult.ru/serii/525-avatar-legenda-ob-aange-i-korre.html"),
+    WebPage("http://animevost.club/online/legenda_o_grankreste_2018_720_hd/28-1-0-564")
 )
