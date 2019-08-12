@@ -11,10 +11,10 @@ open class InternalManager(
         const val TAG = "models.InternalManager"
     }
 
-    fun toStorage(dirname: String, filename: String, data: String) : File {
+    fun saveData(dirname: String, filename: String, data: ByteArray) : File {
         val dir = context.getDir(dirname, 0)
         val file = File(dir, filename)
-        file.writeBytes(data.toByteArray())
+        file.writeBytes(data)
 
         Log.d(TAG, "Saved file: '${file.path}'")
         return file
@@ -30,7 +30,7 @@ open class InternalManager(
         }
     }
 
-    fun allFromStorage(dirname: String) : Array<File>? {
+    fun dirFiles(dirname: String) : Array<File>? {
         val dir = context.getDir(dirname, 0)
         val files = dir.listFiles()
 
