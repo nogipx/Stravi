@@ -57,8 +57,7 @@ open class InternalManager(
     fun deleteFile(dirname: String, filename: String) {
         val dir = context.getDir(dirname, 0)
         val file = File(dir, filename)
-
-        file.delete()
+        if (file.exists()) file.delete()
         Log.d(TAG, "Delete file: '${file.path}'")
     }
 

@@ -1,59 +1,30 @@
 package com.nogipx.stravi.models
 
 import android.content.Context
-import android.util.Log
-import com.google.gson.Gson
+import com.google.gson.annotations.Expose
+import java.io.File
 
 
 data class WebExtension(
-    var name: String = "",
-    var id: String = "",
-    var css: String = "",
-    var targets: List<String> = listOf()) {
+    @Expose var name: String = "",
+    @Expose var id: String = "",
+    @Expose var css: String = "",
+    @Expose var targets: List<String> = listOf())
+    : InternalStorage("extensions") {
 
     companion object {
         private const val TAG = "models.WebExtension"
-        const val INTERNAL_DIR = "extensions"
-
-        fun fromJson(json: String?) : WebExtension =
-            Gson().fromJson(json, WebExtension::class.java)
-
-        fun get(context: Context, extensionId: String) : WebExtension? {
-            val extension = getAll(context).find { it.id == extensionId }
-            return if (extension != null) {
-                Log.d(TAG, "Got extension: ID='${extension.id}'")
-                extension
-
-            } else null
-        }
-
-        fun getAll(context: Context): List<WebExtension> =
-            InternalManager(context)
-                .dirFiles(INTERNAL_DIR)!!
-                .map { fromJson(it.readText()) }
-
-        fun deleteAll(context: Context) =
-            InternalManager(context)
-                .deleteDir(INTERNAL_DIR)
-
-        fun isFilenameFree(context: Context, filename: String) =
-            InternalManager(context)
-                .isFilenameFree(INTERNAL_DIR, filename)
-
     }
 
-    fun toJson(): String = Gson().toJson(this)
-
-    fun save(context: Context) =
-        InternalManager(context)
-            .saveData(INTERNAL_DIR, "extension_$id", toJson().toByteArray())
+    fun save(context: Context) : File? =
+        if (isNotEmpty())
+            super.save(context, "extension_$id", toJson().toByteArray())
+        else null
 
     fun delete(context: Context) =
-        InternalManager(context)
-            .deleteFile(INTERNAL_DIR, "extension_$id")
+        super.delete(context,"extension_$id")
 
     fun isEmpty() = name.isEmpty() && id.isEmpty()
 
     fun isNotEmpty() = !isEmpty()
-
 }

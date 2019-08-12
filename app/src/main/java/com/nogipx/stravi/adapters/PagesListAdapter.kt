@@ -11,6 +11,7 @@ import com.nogipx.stravi.R
 import com.nogipx.stravi.activities.WebPageActivity
 import com.nogipx.stravi.models.WebExtension
 import com.nogipx.stravi.models.WebPage
+import java.net.URL
 
 class PagesListAdapter (messyPages: List<WebPage>)
     : RecyclerView.Adapter<PagesListAdapter.MyViewHolder>() {
@@ -43,14 +44,14 @@ class PagesListAdapter (messyPages: List<WebPage>)
             Log.d(TAG, "Click on $position item.")
 
             val context = it.context
-            val extension = WebExtension.get(context, page.extensionId)
+            val extension = WebExtension().get<WebExtension>(context, page.extensionId)
 
             if (extension == null) {
                 Toast.makeText(context, "Extension not found", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val intent = WebPageActivity.createIntent(context, page.url, extension)
+            val intent = WebPageActivity.createIntent(context, URL(page.url), extension)
             context.startActivity(intent)
 
         }

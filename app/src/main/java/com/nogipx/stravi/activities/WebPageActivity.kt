@@ -39,7 +39,7 @@ class WebPageActivity : AppCompatActivity() {
         mWebView = findViewById(R.id.playerWebView)
 
         val url = intent.getStringExtra(EXTRA_PAGE_URL)
-        val extension = WebExtension.fromJson(intent.getStringExtra(EXTRA_WEB_EXTENSION_JSON))
+        val extension = WebExtension().fromJson<WebExtension>(intent.getStringExtra(EXTRA_WEB_EXTENSION_JSON)!!)
 
         val jse = MyVisibilityJsGenerator(targetsSelector = extension.targets.joinToString())
 

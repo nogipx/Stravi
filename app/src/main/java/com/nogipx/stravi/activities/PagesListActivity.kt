@@ -3,6 +3,7 @@ package com.nogipx.stravi.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nogipx.stravi.R
 import com.nogipx.stravi.adapters.PagesListAdapter
 import com.nogipx.stravi.extensions
-import com.nogipx.stravi.models.WebExtension
+import com.nogipx.stravi.models.InternalStorage
 import com.nogipx.stravi.models.WebPage
 import com.nogipx.stravi.pages
 
@@ -34,13 +35,7 @@ class PagesListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pages_list)
 
         viewManager = LinearLayoutManager(this)
-
-        viewAdapter = PagesListAdapter(pages)
-
-
-        extensions.values.forEach { it.toStorage(applicationContext) }
-        WebExtension.delete(applicationContext, "mega-mult.ru")
-
+        viewAdapter = PagesListAdapter(WebPage().getAll(applicationContext))
 
         recyclerView = findViewById<RecyclerView>(R.id.pagesList).apply {
             layoutManager = viewManager
@@ -60,7 +55,7 @@ class PagesListActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK) {
                     val pageJson = data!!.getStringExtra(EXTRA_PAGE)
 
-                    if (pageJson != null) pages.add(WebPage.fromJson(pageJson))
+                    if (pageJson != null) pages.add(WebPage().fromJson(pageJson))
                 }
             }
         }
