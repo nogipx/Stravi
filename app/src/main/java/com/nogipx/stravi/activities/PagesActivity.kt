@@ -3,25 +3,17 @@ package com.nogipx.stravi.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nogipx.stravi.R
-import com.nogipx.stravi.adapters.PagesListAdapter
-import com.nogipx.stravi.extensions
-import com.nogipx.stravi.models.InternalStorage
+import com.nogipx.stravi.adapters.PagesAdapter
 import com.nogipx.stravi.models.WebPage
 import com.nogipx.stravi.pages
 
-
-class PagesListActivity : AppCompatActivity() {
+class PagesActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "activities.PagesList"
         const val CREATE_WEBPAGE_REQUEST = 0
-        const val EXTRA_PAGE = CreateWebPageActivity.EXTRA_PAGE
+        const val EXTRA_PAGE = PageSettingsActivity.EXTRA_PAGE
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -35,7 +27,7 @@ class PagesListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pages_list)
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = PagesListAdapter(WebPage().getAll(applicationContext))
+        viewAdapter = PagesAdapter(WebPage().getAll(applicationContext))
 
         recyclerView = findViewById<RecyclerView>(R.id.pagesList).apply {
             layoutManager = viewManager
@@ -44,8 +36,8 @@ class PagesListActivity : AppCompatActivity() {
 
         actionButton = findViewById(R.id.pagesList_actionButton)
         actionButton.setOnClickListener {
-            val intent = Intent(it.context, CreateWebPageActivity::class.java)
-            startActivityForResult(intent, 0)
+            val intent = Intent(it.context, PageSettingsActivity::class.java)
+            startActivityForResult(intent, CREATE_WEBPAGE_REQUEST)
         }
     }
 

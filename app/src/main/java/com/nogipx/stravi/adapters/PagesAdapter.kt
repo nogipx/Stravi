@@ -6,26 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.nogipx.stravi.R
 import com.nogipx.stravi.activities.WebPageActivity
 import com.nogipx.stravi.models.WebExtension
 import com.nogipx.stravi.models.WebPage
 import java.net.URL
 
-class PagesListAdapter (messyPages: List<WebPage>)
-    : RecyclerView.Adapter<PagesListAdapter.MyViewHolder>() {
+class PagesAdapter (messyPages: List<WebPage>)
+    : RecyclerView.Adapter<PagesAdapter.MyViewHolder>() {
 
     private val pages = messyPages.filter { it.isNotEmpty() }
 
     companion object {
-        const val TAG = "PagesListAdapter"
+        const val TAG = "adapters.PagesAdapter"
     }
 
     override fun getItemCount(): Int = pages.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_pages_list_item, parent, false)
+        val holder = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_page, parent, false)
         return MyViewHolder(holder)
     }
 
