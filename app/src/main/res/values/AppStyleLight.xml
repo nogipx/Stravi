@@ -19,7 +19,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="NoActionBar.Fullscreen">
+    <style name="Fullscreen">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

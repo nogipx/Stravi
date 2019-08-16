@@ -1,6 +1,7 @@
 package com.nogipx.stravi.models
 
 import android.content.Context
+import com.google.gson.annotations.Expose
 import java.io.File
 
 
