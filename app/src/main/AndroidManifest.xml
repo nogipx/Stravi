@@ -14,8 +14,7 @@
         android:theme="@style/Stravi.Light"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activities.PageSettingsActivity"
-            android:theme="@style/Dialog">
+            android:name=".activities.PageSettingsActivity">
         </activity>
         <activity
             android:name=".activities.WebPageActivity"

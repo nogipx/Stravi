@@ -3,8 +3,13 @@ package com.nogipx.stravi.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nogipx.stravi.R
 import com.nogipx.stravi.adapters.PagesAdapter
+import com.nogipx.stravi.extensions
 import com.nogipx.stravi.models.WebPage
 import com.nogipx.stravi.pages
 
@@ -25,6 +30,9 @@ class PagesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pages_list)
+
+        pages.forEach {it.save(applicationContext)}
+        extensions.values.forEach {it.save(applicationContext)}
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = PagesAdapter(WebPage().getAll(applicationContext))
