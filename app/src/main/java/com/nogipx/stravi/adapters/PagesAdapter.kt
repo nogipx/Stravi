@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.nogipx.stravi.R
 import com.nogipx.stravi.activities.WebPageActivity
 import com.nogipx.stravi.models.WebExtension
@@ -36,23 +37,26 @@ class PagesAdapter (messyPages: List<WebPage>)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val page: WebPage = pages[position]
 
-        holder.pageLabel.text = page.label
-        holder.pageUrl.text = page.url.toString()
+        holder.apply {
+            pageLabel.text = page.label
+            pageUrl.text = page.url
 
-        holder.view.setOnClickListener {
-            Log.d(TAG, "Click on $position item.")
+            view.setOnClickListener {
+                Log.d(TAG, "Click on $position item.")
 
-            val context = it.context
-            val extension = WebExtension().get<WebExtension>(context, page.extensionId)
+                val context = it.context
+                val extension = WebExtension().get<WebExtension>(context, page.extensionId)
 
-            if (extension == null) {
-                Toast.makeText(context, "Extension not found", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                if (extension == null) {
+                    Log.e(TAG, "Extension not found. Position: $position")
+                    Toast.makeText(context, "Extension not found", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val intent = WebPageActivity.createIntent(context, URL(page.url), extension)
+                context.startActivity(intent)
+
             }
-
-            val intent = WebPageActivity.createIntent(context, URL(page.url), extension)
-            context.startActivity(intent)
-
         }
     }
 }
