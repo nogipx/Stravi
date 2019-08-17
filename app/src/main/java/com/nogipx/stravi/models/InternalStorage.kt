@@ -1,24 +1,48 @@
 package com.nogipx.stravi.models
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import java.io.File
-import java.util.*
+import java.util.UUID
 
-open class InternalStorage (val directory: String = "") {
+open class InternalStorage (
+    val directory: String = "",
+    private val debug: Boolean = false) {
 
     @Expose val uuid: String = UUID.randomUUID().toString().replace("-", "")
 
-    inline fun <reified T : InternalStorage> fromJson(json: String) : T =
-        Gson().fromJson(json, T::class.java)
+    companion object {
+        const val TAG = "InternalStorage"
+    }
 
-    inline fun <reified T : InternalStorage> get(context: Context, uuid: String) : T? =
-        getAll<T>(context).find { it.uuid == uuid }
+    fun debug(msg: String) {
+        if (debug) Log.d(TAG, msg)
+    }
 
-    inline fun <reified T : InternalStorage> getAll(context: Context): List<T> =
-        InternalManager(context).dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
+    inline fun <reified T : InternalStorage> fromJson(json: String) : T {
+        val extension = Gson().fromJson(json, T::class.java)
+        debug("Restore <${className<T>()}> from json. UUID: ${extension.uuid}")
+        return extension
+    }
+
+    inline fun <reified T : InternalStorage> get(context: Context, uuid: String) : T? {
+        val item = getAll<T>(context).find { it.uuid == uuid }
+        if (item != null)
+            debug("Got <${className<T>()}> UUID: ${item.uuid}")
+        return item
+    }
+
+    inline fun <reified T : InternalStorage> getAll(context: Context): List<T> {
+        val items = InternalManager(context).dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
+        debug("Got ${items.size} <${className<T>()}> items")
+        return items
+    }
+
+    inline fun <reified T> className() : String =
+        T::class.java.toString().split(".").last()
 
     fun deleteAll(context: Context) =
         InternalManager(context).deleteDir(directory)

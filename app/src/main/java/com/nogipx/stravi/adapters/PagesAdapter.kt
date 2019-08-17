@@ -13,19 +13,19 @@ import com.nogipx.stravi.models.WebExtension
 import com.nogipx.stravi.models.WebPage
 import java.net.URL
 
-class PagesListAdapter (messyPages: List<WebPage>)
-    : RecyclerView.Adapter<PagesListAdapter.MyViewHolder>() {
+class PagesAdapter (messyPages: List<WebPage>)
+    : RecyclerView.Adapter<PagesAdapter.MyViewHolder>() {
 
     private val pages = messyPages.filter { it.isNotEmpty() }
 
     companion object {
-        const val TAG = "PagesListAdapter"
+        const val TAG = "adapters.PagesAdapter"
     }
 
     override fun getItemCount(): Int = pages.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_pages_list_item, parent, false)
+        val holder = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_page, parent, false)
         return MyViewHolder(holder)
     }
 
@@ -37,23 +37,26 @@ class PagesListAdapter (messyPages: List<WebPage>)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val page: WebPage = pages[position]
 
-        holder.pageLabel.text = page.label
-        holder.pageUrl.text = page.url.toString()
+        holder.apply {
+            pageLabel.text = page.label
+            pageUrl.text = page.url
 
-        holder.view.setOnClickListener {
-            Log.d(TAG, "Click on $position item.")
+            view.setOnClickListener {
+                Log.d(TAG, "Click on $position item.")
 
-            val context = it.context
-            val extension = WebExtension().get<WebExtension>(context, page.extensionId)
+                val context = it.context
+                val extension = WebExtension().get<WebExtension>(context, page.extensionId)
 
-            if (extension == null) {
-                Toast.makeText(context, "Extension not found", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                if (extension == null) {
+                    Log.e(TAG, "Extension not found. Position: $position")
+                    Toast.makeText(context, "Extension not found", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val intent = WebPageActivity.createIntent(context, URL(page.url), extension)
+                context.startActivity(intent)
+
             }
-
-            val intent = WebPageActivity.createIntent(context, URL(page.url), extension)
-            context.startActivity(intent)
-
         }
     }
 }
