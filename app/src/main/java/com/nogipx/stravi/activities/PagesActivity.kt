@@ -9,41 +9,42 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nogipx.stravi.R
 import com.nogipx.stravi.adapters.PagesAdapter
-import com.nogipx.stravi.extensions
 import com.nogipx.stravi.models.WebPage
-import com.nogipx.stravi.pages
 
 class PagesActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "activities.PagesList"
-        const val CREATE_WEBPAGE_REQUEST = 0
-        const val EXTRA_PAGE = PageSettingsActivity.EXTRA_PAGE
+        const val CREATE_WEBPAGE_REQUEST = 1
     }
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var mPages: List<WebPage>
 
-    private lateinit var actionButton: FloatingActionButton
+    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mPagesAdapter: PagesAdapter
+    private lateinit var mLayoutManager: RecyclerView.LayoutManager
+
+    private lateinit var mActionButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pages_list)
 
-        pages.forEach {it.save(applicationContext)}
-        extensions.values.forEach {it.save(applicationContext)}
+//        pages.forEach {it.save(applicationContext)}
+//        extensions.values.forEach {it.save(applicationContext)}
 
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = PagesAdapter(WebPage().getAll(applicationContext))
+        mPages = WebPage().getAll(applicationContext)
 
-        recyclerView = findViewById<RecyclerView>(R.id.pagesList).apply {
-            layoutManager = viewManager
-            adapter = viewAdapter
+        mLayoutManager = LinearLayoutManager(this)
+        mPagesAdapter = PagesAdapter(mPages)
+
+        mRecyclerView = findViewById<RecyclerView>(R.id.pagesList).apply {
+            layoutManager = mLayoutManager
+            adapter = mPagesAdapter
         }
 
-        actionButton = findViewById(R.id.pagesList_actionButton)
-        actionButton.setOnClickListener {
+        mActionButton = findViewById(R.id.pagesList_actionButton)
+        mActionButton.setOnClickListener {
             val intent = Intent(it.context, PageSettingsActivity::class.java)
             startActivityForResult(intent, CREATE_WEBPAGE_REQUEST)
         }
@@ -53,9 +54,13 @@ class PagesActivity : AppCompatActivity() {
         when(requestCode) {
             CREATE_WEBPAGE_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val pageJson = data!!.getStringExtra(EXTRA_PAGE)
-
-                    if (pageJson != null) pages.add(WebPage().fromJson(pageJson))
+                    val pageJson = data!!.getStringExtra(PageSettingsActivity.EXTRA_PAGE)
+                    if (pageJson != null) {
+                        val extension = WebPage().fromJson<WebPage>(pageJson)
+                        extension.save(applicationContext)
+                        mPagesAdapter.activePages = WebPage().getAll(applicationContext)
+                        mPagesAdapter.notifyDataSetChanged()
+                    }
                 }
             }
         }

@@ -13,16 +13,16 @@ import com.nogipx.stravi.models.WebExtension
 import com.nogipx.stravi.models.WebPage
 import java.net.URL
 
-class PagesAdapter (messyPages: List<WebPage>)
+class PagesAdapter (defaultPages: List<WebPage>)
     : RecyclerView.Adapter<PagesAdapter.MyViewHolder>() {
 
-    private val pages = messyPages.filter { it.isNotEmpty() }
+    var activePages: List<WebPage> = defaultPages
 
     companion object {
         const val TAG = "adapters.PagesAdapter"
     }
 
-    override fun getItemCount(): Int = pages.size
+    override fun getItemCount(): Int = activePages.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val holder = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_page, parent, false)
@@ -35,7 +35,7 @@ class PagesAdapter (messyPages: List<WebPage>)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val page: WebPage = pages[position]
+        val page: WebPage = activePages[position]
 
         holder.apply {
             pageLabel.text = page.label

@@ -6,26 +6,26 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import java.io.File
-import java.util.UUID
+import java.util.*
 
 open class InternalStorage (
     val directory: String = "",
     private val debug: Boolean = false) {
 
-    @Expose val uuid: String = UUID.randomUUID().toString().replace("-", "")
+    @Expose val uuid: String = UUID.randomUUID().toString()
 
     companion object {
         const val TAG = "InternalStorage"
     }
 
     fun debug(msg: String) {
-        if (debug) Log.d(TAG, msg)
+        if (debug) Log.i(TAG, msg)
     }
 
     inline fun <reified T : InternalStorage> fromJson(json: String) : T {
-        val extension = Gson().fromJson(json, T::class.java)
-        debug("Restore <${className<T>()}> from json. UUID: ${extension.uuid}")
-        return extension
+        val item = Gson().fromJson(json, T::class.java)
+        debug("Restore <${className<T>()}> from json. UUID: ${item.uuid}")
+        return item
     }
 
     inline fun <reified T : InternalStorage> get(context: Context, uuid: String) : T? {
@@ -36,7 +36,7 @@ open class InternalStorage (
     }
 
     inline fun <reified T : InternalStorage> getAll(context: Context): List<T> {
-        val items = InternalManager(context).dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
+        val items = InternalFileManager(context).dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
         debug("Got ${items.size} <${className<T>()}> items")
         return items
     }
@@ -45,19 +45,23 @@ open class InternalStorage (
         T::class.java.toString().split(".").last()
 
     fun deleteAll(context: Context) =
-        InternalManager(context).deleteDir(directory)
+        InternalFileManager(context).deleteDir(directory)
 
     fun isFilenameFree(context: Context, filename: String) =
-        InternalManager(context).isFilenameFree(directory, filename)
+        InternalFileManager(context).isFilenameFree(directory, filename)
 
-    open fun toJson(): String = GsonBuilder()
-        .excludeFieldsWithoutExposeAnnotation()
-        .create()
-        .toJson(this)
+    open fun toJson(): String {
+        val json = GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .create()
+            .toJson(this)
+        debug("<${this.javaClass}> to json result: $json")
+        return json
+    }
 
     open fun save(context: Context, filename: String, data: ByteArray) : File =
-        InternalManager(context).saveData(directory, filename, data)
+        InternalFileManager(context).saveData(directory, filename, data)
 
     open fun delete(context: Context, filename: String) =
-        InternalManager(context).deleteFile(directory, filename)
+        InternalFileManager(context).deleteFile(directory, filename)
 }

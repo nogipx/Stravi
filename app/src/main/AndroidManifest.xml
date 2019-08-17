@@ -11,15 +11,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Stravi.Light"
+        android:theme="@style/Theme.Stravi"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activities.PageSettingsActivity">
         </activity>
         <activity
             android:name=".activities.WebPageActivity"
-            android:keepScreenOn="true"
-            android:theme="@style/NoActionBar">
+            android:keepScreenOn="true">
         </activity>
         <activity
             android:name=".activities.PagesActivity"

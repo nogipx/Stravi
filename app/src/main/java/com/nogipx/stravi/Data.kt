@@ -30,7 +30,7 @@ val extensions = mapOf(
 )
 
 val pages = mutableListOf(
-    WebPage("https://online.animedia.tv/anime/mastera-mecha-onlayn/1/1"),
-    WebPage("http://mega-mult.ru/serii/525-avatar-legenda-ob-aange-i-korre.html"),
-    WebPage("http://animevost.club/online/legenda_o_grankreste_2018_720_hd/28-1-0-564")
+    WebPage("http://mega-mult.ru/serii/525-avatar-legenda-ob-aange-i-korre.html", extensionId = "71fbf02a-6b22-4b63-b26f-8e2178f67dc8"),
+    WebPage("https://online.animedia.tv/anime/mastera-mecha-onlayn/1/1", extensionId = "b865f47a-ef2b-4ca5-83d8-e1f07a834f4e"),
+    WebPage("http://animevost.club/online/legenda_o_grankreste_2018_720_hd/28-1-0-564", extensionId = "78a4e5e8-f2da-4255-9cae-0afe3bd63526")
 )

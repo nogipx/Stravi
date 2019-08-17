@@ -16,14 +16,15 @@ import com.nogipx.stravi.R
 import com.nogipx.stravi.models.WebExtension
 
 class ExtensionsAdapter(
-    private val extensions: List<WebExtension>,
+    private val defaultExtensions: List<WebExtension>,
     private val defaultPosition: Int = 0)
     : RecyclerView.Adapter<ExtensionsAdapter.MyViewHolder>(){
 
     var activeUuid: String = ""
     var mTracker: SelectionTracker<String>? = null
 
-    var activeExtensions: List<WebExtension> = extensions
+    var activeExtensions: List<WebExtension> = defaultExtensions
+    var selectedExtension: WebExtension? = null
 
     companion object {
         const val TAG = "ExtensionAdapter"
@@ -61,14 +62,12 @@ class ExtensionsAdapter(
         fun onActivated() {
             Log.v(TAG, "Activate holder: Name: ${name.text}")
             selectionIcon.visibility = View.VISIBLE
-//            view.setBackgroundColor(R.color.backgroundColor)
         }
 
         @SuppressLint("ResourceAsColor")
         fun onDeactivated() {
             Log.v(TAG, "Deactivate holder: Name: ${name.text}")
             selectionIcon.visibility = View.INVISIBLE
-//            view.setBackgroundColor(R.color.white)
         }
     }
 
@@ -85,6 +84,10 @@ class ExtensionsAdapter(
         }
     }
 
+
+    /**
+     * Use particular extension's uuid as key for its view holder.
+     */
     class MyItemKeyProvider(private val recyclerView: RecyclerView) :
         ItemKeyProvider<String>(SCOPE_MAPPED) {
 
@@ -127,27 +130,28 @@ class ExtensionsAdapter(
         // Fill data to holder
         holder.apply {
             name.text = extension.name
-            domain.text = extension.domain
+            domain.text = extension.host
         }
 
         // Change selection on item click
         holder.view.setOnClickListener {
             mTracker?.select(extension.uuid)
+            selectedExtension = activeExtensions[position]
         }
 
     }
 
-    fun filterByDomain(domain: String) {
-        if (domain.isEmpty()) unfilter()
+    fun filterByHost(host: String) {
+        if (host.isEmpty()) unfilter()
         else {
-            activeExtensions = extensions.filter { it.domain.startsWith(domain) }
+            activeExtensions = defaultExtensions.filter { it.host.startsWith(host) }
             Log.v(TAG, "Filter result: ${activeExtensions.size} extensions")
         }
         notifyDataSetChanged()
     }
 
     fun unfilter() {
-        activeExtensions = extensions
+        activeExtensions = defaultExtensions
         Log.v(TAG, "Unfiltered")
         notifyDataSetChanged()
     }

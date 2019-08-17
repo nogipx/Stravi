@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.Log
 import java.io.File
 
-open class InternalManager(
+open class InternalFileManager(
     private val context: Context) {
 
     companion object {
-        const val TAG = "models.InternalManager"
+        const val TAG = "InternalFileManager"
     }
 
     fun saveData(dirname: String, filename: String, data: ByteArray) : File {
@@ -16,7 +16,7 @@ open class InternalManager(
         val file = File(dir, filename)
         file.writeBytes(data)
 
-        Log.d(TAG, "Saved file: '${file.path}'")
+        Log.i(TAG, "Saved file: '${file.path}'")
         return file
     }
 
@@ -34,7 +34,7 @@ open class InternalManager(
         val dir = context.getDir(dirname, 0)
         val files = dir.listFiles()
 
-        Log.d(TAG, "Returned ${files!!.size} files from ${dir.path}")
+        Log.i(TAG, "Returned ${files!!.size} files from ${dir.path}. Names: ${files.joinToString { it.name }}")
         return files
     }
 
@@ -51,14 +51,14 @@ open class InternalManager(
     fun deleteDir(dirname: String) {
         val dir = context.getDir(dirname, 0)
         dir.deleteRecursively()
-        Log.d(TAG, "Force delete directory '${dir.path}'")
+        Log.i(TAG, "Force delete directory '${dir.path}'")
     }
 
     fun deleteFile(dirname: String, filename: String) {
         val dir = context.getDir(dirname, 0)
         val file = File(dir, filename)
         if (file.exists()) file.delete()
-        Log.d(TAG, "Delete file: '${file.path}'")
+        Log.i(TAG, "Delete file: '${file.path}'")
     }
 
     fun deleteEmptyDirs() {
