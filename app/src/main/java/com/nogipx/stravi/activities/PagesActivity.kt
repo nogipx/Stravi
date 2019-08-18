@@ -55,9 +55,12 @@ class PagesActivity : AppCompatActivity() {
             CREATE_WEBPAGE_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val pageJson = data!!.getStringExtra(PageSettingsActivity.EXTRA_PAGE)
+
                     if (pageJson != null) {
-                        val extension = WebPage().fromJson<WebPage>(pageJson)
-                        extension.save(applicationContext)
+                        val item = WebPage().fromJson<WebPage>(pageJson)
+
+                        item.save(applicationContext)
+
                         mPagesAdapter.activePages = WebPage().getAll(applicationContext)
                         mPagesAdapter.notifyDataSetChanged()
                     }

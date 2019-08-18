@@ -9,8 +9,7 @@ import java.io.File
 import java.util.*
 
 open class InternalStorage (
-    val directory: String = "",
-    private val debug: Boolean = false) {
+    val directory: String = "") {
 
     @Expose val uuid: String = UUID.randomUUID().toString()
 
@@ -18,31 +17,23 @@ open class InternalStorage (
         const val TAG = "InternalStorage"
     }
 
-    fun debug(msg: String) {
-        if (debug) Log.i(TAG, msg)
-    }
-
     inline fun <reified T : InternalStorage> fromJson(json: String) : T {
         val item = Gson().fromJson(json, T::class.java)
-        debug("Restore <${className<T>()}> from json. UUID: ${item.uuid}")
+        Log.i(TAG, "Restore from json $item")
         return item
     }
 
     inline fun <reified T : InternalStorage> get(context: Context, uuid: String) : T? {
         val item = getAll<T>(context).find { it.uuid == uuid }
         if (item != null)
-            debug("Got <${className<T>()}> UUID: ${item.uuid}")
+            Log.i(TAG, "Got $item")
         return item
     }
 
     inline fun <reified T : InternalStorage> getAll(context: Context): List<T> {
-        val items = InternalFileManager(context).dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
-        debug("Got ${items.size} <${className<T>()}> items")
-        return items
+        return InternalFileManager(context)
+            .dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
     }
-
-    inline fun <reified T> className() : String =
-        T::class.java.toString().split(".").last()
 
     fun deleteAll(context: Context) =
         InternalFileManager(context).deleteDir(directory)
@@ -55,9 +46,15 @@ open class InternalStorage (
             .excludeFieldsWithoutExposeAnnotation()
             .create()
             .toJson(this)
-        debug("<${this.javaClass}> to json result: $json")
+        Log.d(TAG," json result: $json")
         return json
     }
+
+    protected fun className() : String =
+        this.javaClass.toString().split(".").last()
+
+    override fun toString(): String =
+        "${className()}: uuid:$uuid"
 
     open fun save(context: Context, filename: String, data: ByteArray) : File =
         InternalFileManager(context).saveData(directory, filename, data)

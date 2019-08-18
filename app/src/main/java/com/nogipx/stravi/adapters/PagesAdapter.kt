@@ -19,7 +19,7 @@ class PagesAdapter (defaultPages: List<WebPage>)
     var activePages: List<WebPage> = defaultPages
 
     companion object {
-        const val TAG = "adapters.PagesAdapter"
+        const val TAG = "PagesAdapter"
     }
 
     override fun getItemCount(): Int = activePages.size
@@ -30,29 +30,30 @@ class PagesAdapter (defaultPages: List<WebPage>)
     }
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val pageLabel: TextView = view.findViewById(R.id.pageNickname)
-        val pageUrl: TextView = view.findViewById(R.id.pageUrl)
+        val mPageLabel: TextView = view.findViewById(R.id.pageNickname)
+        val mPageUrl: TextView = view.findViewById(R.id.pageUrl)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val page: WebPage = activePages[position]
 
         holder.apply {
-            pageLabel.text = page.label
-            pageUrl.text = page.url
+            mPageLabel.text = page.label
+            mPageUrl.text = page.url
 
             view.setOnClickListener {
-                Log.d(TAG, "Click on $position item.")
 
                 val context = it.context
                 val extension = WebExtension().get<WebExtension>(context, page.extensionId)
 
                 if (extension == null) {
-                    Log.e(TAG, "Extension not found. Position: $position")
-                    Toast.makeText(context, "Extension not found", Toast.LENGTH_SHORT).show()
+                    val msg = "Extension with UUID='${page.extensionId}' not found."
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "$msg Position: $position")
                     return@setOnClickListener
                 }
 
+                Log.i(TAG, "Extension found. $extension")
                 val intent = WebPageActivity.createIntent(context, URL(page.url), extension)
                 context.startActivity(intent)
 

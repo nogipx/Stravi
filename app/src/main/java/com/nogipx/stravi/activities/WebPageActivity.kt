@@ -3,6 +3,7 @@ package com.nogipx.stravi.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -20,7 +21,7 @@ class WebPageActivity : AppCompatActivity() {
     private lateinit var mWebViewClient: WebViewClient
 
     companion object {
-        private const val TAG = "activities.WebPage"
+        private const val TAG = "WebPageActivity"
         const val EXTRA_PAGE_URL = "$TAG.PAGE_URL"
         const val EXTRA_WEB_EXTENSION_JSON = "$TAG.WEB_EXTENSION_JSON"
 
@@ -39,6 +40,8 @@ class WebPageActivity : AppCompatActivity() {
         mWebView = findViewById(R.id.playerWebView)
 
         val url = intent.getStringExtra(EXTRA_PAGE_URL)
+
+        Log.v(TAG, "Open url: $url")
         val extension = WebExtension().fromJson<WebExtension>(intent.getStringExtra(EXTRA_WEB_EXTENSION_JSON)!!)
 
         val jse = MyVisibilityJsGenerator(targetsSelector = extension.targets.joinToString())

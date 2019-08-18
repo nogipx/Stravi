@@ -24,6 +24,10 @@ data class WebExtension(
     fun delete(context: Context) =
         super.delete(context,"extension_$host")
 
+    override fun toString(): String = """
+        ${className()}: name:$name, host:$host, uuid:$uuid)
+    """.trimIndent()
+
     fun isEmpty() = name.isEmpty() && host.isEmpty()
 
     fun isNotEmpty() = !isEmpty()

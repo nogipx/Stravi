@@ -23,7 +23,7 @@ class PageSettingsActivity : AppCompatActivity() {
     private var mPage: WebPage = WebPage()
 
     companion object {
-        private const val TAG = "activity.CreateWebPage"
+        private const val TAG = "PageSettingsActivity"
         const val EXTRA_PAGE = "$TAG.EXTRA_PAGE"
 
         fun createIntent(context: Context, page: WebPage) : Intent {
@@ -126,7 +126,7 @@ class PageSettingsActivity : AppCompatActivity() {
             mPage.extensionId = mExtensionsFragment.mAdapter.selectedExtension!!.uuid
 
             Toast.makeText(baseContext, "Updated", Toast.LENGTH_SHORT).show()
-            Log.i(TAG, "Local WebPage(name=${mPage.label}) instance updated")
+            Log.i(TAG, "$mPage has updated")
         }
         return mPage
     }
@@ -154,7 +154,8 @@ class PageSettingsActivity : AppCompatActivity() {
         if (isValidInput()) {
             val data = createIntent(this, getResult())
             setResult(Activity.RESULT_OK, data)
-            Log.i(TAG, "Created WebPage: Name: ${mPage.label}")
+
+            Log.i(TAG, "$mPage has created.")
             finish()
         }
     }

@@ -60,15 +60,17 @@ class ExtensionsAdapter(
 
         @SuppressLint("ResourceAsColor")
         fun onActivated() {
-            Log.v(TAG, "Activate holder: Name: ${name.text}")
+            Log.i(TAG, "Activate holder: $this")
             selectionIcon.visibility = View.VISIBLE
         }
 
         @SuppressLint("ResourceAsColor")
         fun onDeactivated() {
-            Log.v(TAG, "Deactivate holder: Name: ${name.text}")
+            Log.v(TAG, "Deactivate holder: $this")
             selectionIcon.visibility = View.INVISIBLE
         }
+
+        override fun toString(): String = "Name:${name.text}"
     }
 
 
@@ -97,7 +99,7 @@ class ExtensionsAdapter(
             if (position > extensions.size - 1) return null
             val uuid = extensions[position].uuid
 
-            Log.d(TAG, "getKey(position=$position) -> uuid: $uuid")
+            Log.d(TAG, "position: $position -> uuid: $uuid")
             return uuid
         }
 
@@ -107,7 +109,7 @@ class ExtensionsAdapter(
 
             for ((i, v) in extensions.withIndex()) {
                 if (v.uuid == key) {
-                    Log.d(TAG, "getPosition(uuid=$key) -> position: $i")
+                    Log.d(TAG, "uuid: $key -> position: $i")
                     return i
                 }
             }
@@ -145,14 +147,14 @@ class ExtensionsAdapter(
         if (host.isEmpty()) unfilter()
         else {
             activeExtensions = defaultExtensions.filter { it.host.startsWith(host) }
-            Log.v(TAG, "Filter result: ${activeExtensions.size} extensions")
+            Log.i(TAG, "Filter result: ${activeExtensions.size} extensions")
         }
         notifyDataSetChanged()
     }
 
     fun unfilter() {
         activeExtensions = defaultExtensions
-        Log.v(TAG, "Unfiltered")
+        Log.i(TAG, "Reset extensions filter")
         notifyDataSetChanged()
     }
 }

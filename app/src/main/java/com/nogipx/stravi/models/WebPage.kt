@@ -24,6 +24,10 @@ data class WebPage (
     fun delete(context: Context) =
         super.delete(context, "page_$label")
 
+    override fun toString(): String = """
+        ${className()}: label:$label, extensionId:$extensionId, url:$url
+    """.trimIndent()
+
     fun isEmpty() = url.isEmpty() && label.isEmpty()
 
     fun isNotEmpty() = !isEmpty()

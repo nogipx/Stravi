@@ -34,7 +34,7 @@ open class InternalFileManager(
         val dir = context.getDir(dirname, 0)
         val files = dir.listFiles()
 
-        Log.i(TAG, "Returned ${files!!.size} files from ${dir.path}. Names: ${files.joinToString { it.name }}")
+        Log.v(TAG, "Returned ${files!!.size} files from ${dir.path}. Names: ${files.joinToString { it.name }}")
         return files
     }
 
