@@ -24,9 +24,12 @@ open class InternalStorage (
     }
 
     inline fun <reified T : InternalStorage> get(context: Context, uuid: String) : T? {
+        if (uuid.isEmpty()) return null
+
         val item = getAll<T>(context).find { it.uuid == uuid }
         if (item != null)
             Log.i(TAG, "Got $item")
+
         return item
     }
 
@@ -35,8 +38,11 @@ open class InternalStorage (
             .dirFiles(directory)!!.map { fromJson<T>(it.readText()) }
     }
 
-    fun deleteAll(context: Context) =
+    fun deleteDirectory(context: Context) =
         InternalFileManager(context).deleteDir(directory)
+
+    fun deleteFiles(context: Context) =
+        InternalFileManager(context).dirFiles(directory)?.forEach { it.delete() }
 
     fun isFilenameFree(context: Context, filename: String) =
         InternalFileManager(context).isFilenameFree(directory, filename)
@@ -46,7 +52,6 @@ open class InternalStorage (
             .excludeFieldsWithoutExposeAnnotation()
             .create()
             .toJson(this)
-        Log.d(TAG," json result: $json")
         return json
     }
 
@@ -56,9 +61,11 @@ open class InternalStorage (
     override fun toString(): String =
         "${className()}: uuid:$uuid"
 
-    open fun save(context: Context, filename: String, data: ByteArray) : File =
+    open fun save(context: Context,
+                  filename: String = uuid,
+                  data: ByteArray = toJson().toByteArray()) : File =
         InternalFileManager(context).saveData(directory, filename, data)
 
-    open fun delete(context: Context, filename: String) =
+    open fun delete(context: Context, filename: String = uuid) =
         InternalFileManager(context).deleteFile(directory, filename)
 }

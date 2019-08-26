@@ -14,15 +14,11 @@
         android:theme="@style/Theme.Stravi"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activities.PageSettingsActivity">
-        </activity>
-        <activity
-            android:name=".activities.WebPageActivity"
-            android:keepScreenOn="true">
-        </activity>
-        <activity
-            android:name=".activities.PagesActivity"
+            android:name=".browser.WebBrowserActivity"
+            android:keepScreenOn="true"
+            android:theme="@style/NoActionBar.Fullscreen"
             android:configChanges="screenSize|orientation">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

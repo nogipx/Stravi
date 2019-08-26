@@ -1,28 +1,31 @@
 package com.nogipx.stravi.models
 
-import android.content.Context
+import android.util.Log
 import com.google.gson.annotations.Expose
-import java.io.File
+import com.nogipx.stravi.browser.MyVisibilityJsGenerator
+import com.nogipx.stravi.jsgenerator.FunctionJS
 
 
 data class WebExtension(
+    @Expose var active: Boolean = false,
     @Expose var name: String = "",
     @Expose var host: String = "",
     @Expose var css: String = "",
     @Expose var targets: List<String> = listOf())
     : InternalStorage("extensions") {
 
-    companion object {
-        private const val TAG = "models.WebExtension"
+
+    fun generateJs() : List<FunctionJS> {
+        return if (active) {
+
+            val generator = MyVisibilityJsGenerator(targets.toMutableList())
+            if (css.isNotEmpty()) generator.addCSS(css)
+
+            Log.e(TAG, "SELECTORS: ${generator.targetsSelector}")
+            generator.generationChain
+
+        } else listOf(FunctionJS())
     }
-
-    fun save(context: Context) : File? =
-        if (isNotEmpty())
-            super.save(context, "extension_$host", toJson().toByteArray())
-        else null
-
-    fun delete(context: Context) =
-        super.delete(context,"extension_$host")
 
     override fun toString(): String = """
         ${className()}: name:$name, host:$host, uuid:$uuid)

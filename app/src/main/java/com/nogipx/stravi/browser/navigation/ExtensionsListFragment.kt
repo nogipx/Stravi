@@ -1,4 +1,4 @@
-package com.nogipx.stravi.fragments
+package com.nogipx.stravi.browser.navigation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,13 +11,14 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nogipx.stravi.R
-import com.nogipx.stravi.adapters.ExtensionsAdapter
+import com.nogipx.stravi.common.ModelManageAdapter
 import com.nogipx.stravi.models.WebExtension
+import com.nogipx.stravi.web_extension.WebExtensionManageAdapter
 
 class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
-    lateinit var mAdapter: ExtensionsAdapter
+    lateinit var mListAdapter: ModelManageAdapter
     lateinit var mTracker: SelectionTracker<String>
 
     private lateinit var extensions: List<WebExtension>
@@ -31,22 +32,21 @@ class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment()
         val view = inflater.inflate(R.layout.fragment_extensions_list, container, false)
 
         // Find views
-        mRecyclerView = view.findViewById(R.id.extensionList_recyclerView)
+        mRecyclerView = view.findViewById(R.id.extension_list_recycler_view)
 
 
         // Setup data
         extensions = WebExtension().getAll(context!!)
 
         if (selectedUuid.isNotEmpty()) {
-            val extension = extensions.find { it.uuid == selectedUuid }
-            if (extension != null) mAdapter.activeUuid = extension.uuid
+            mListAdapter.activeUuid = selectedUuid
         }
 
 
         // Setup recycler view
-        mAdapter = ExtensionsAdapter(extensions)
+        mListAdapter = WebExtensionManageAdapter(extensions)
         mRecyclerView.apply {
-            adapter = mAdapter
+            adapter = mListAdapter
             layoutManager = LinearLayoutManager(activity)
         }
 
@@ -55,8 +55,8 @@ class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment()
         mTracker = SelectionTracker.Builder<String>(
             "extensionSelection",
             mRecyclerView,
-            ExtensionsAdapter.MyItemKeyProvider(mRecyclerView),
-            ExtensionsAdapter.MyItemDetailsLookup(mRecyclerView),
+            ModelManageAdapter.ModelItemKeyProvider(mRecyclerView),
+            ModelManageAdapter.ModelItemDetailsLookup(mRecyclerView),
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectSingleAnything()
@@ -64,7 +64,7 @@ class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment()
 
         mTracker.onRestoreInstanceState(savedInstanceState)
 
-        mAdapter.mTracker = mTracker
+        mListAdapter.mTracker = mTracker
 
 
         return view

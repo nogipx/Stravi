@@ -1,35 +1,45 @@
 <resources>
 
     <style name="Theme.Stravi" parent="Theme.MaterialComponents.Light.Bridge">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorSecondary</item>
-        <item name="colorControlHighlight">@color/colorSecondaryLight</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryLight</item>
+        <!--<item name="colorSecondary">@color/colorPrimaryLight</item>-->
+        <!--<item name="colorAccent">@color/colorSecondary</item>-->
+        <!--<item name="colorControlHighlight">@color/colorSecondaryLight</item>-->
+        <!--<item name="colorSecondary">@color/colorSecondary</item>-->
     </style>
 
 
     <style name="NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorSecondary</item>
-        <item name="colorControlHighlight">@color/colorSecondaryLight</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryLight</item>
+        <!--<item name="colorSecondary">@color/colorPrimaryLight</item>-->
+        <!--<item name="colorAccent">@color/colorSecondary</item>-->
+        <!--<item name="colorControlHighlight">@color/colorSecondaryLight</item>-->
+        <!--<item name="colorSecondary">@color/colorSecondary</item>-->
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="Fullscreen">
+    <style name="NoActionBar.Fullscreen">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="NoActionBar.Fullscreen.Translucent">
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
     <style name="Dialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorSecondary</item>
-        <item name="colorControlHighlight">@color/colorSecondaryLight</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryLight</item>
+
+        <!--<item name="colorAccent">@color/colorSecondary</item>-->
+        <!--<item name="colorControlHighlight">@color/colorSecondaryLight</item>-->
+        <!--<item name="colorSecondary">@color/colorSecondary</item>-->
     </style>
 
 </resources>

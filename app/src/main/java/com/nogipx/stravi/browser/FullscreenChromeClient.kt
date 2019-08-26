@@ -1,4 +1,4 @@
-package com.nogipx.stravi
+package com.nogipx.stravi.browser
 
 import android.view.View
 import android.view.ViewGroup

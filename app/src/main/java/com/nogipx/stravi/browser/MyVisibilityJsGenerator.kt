@@ -1,11 +1,17 @@
-package com.nogipx.stravi.jsgenerator
+package com.nogipx.stravi.browser
+
+import com.nogipx.stravi.jsgenerator.FunctionJS
+import com.nogipx.stravi.jsgenerator.VisibilityJsGenerator
 
 /**
  * @author https://github.com/nogipx
  */
-class MyVisibilityJsGenerator (
-    private val targetsSelector: String = "")
-    : VisibilityJsGenerator() {
+class MyVisibilityJsGenerator(
+    private val targetsCss: MutableList<String> = mutableListOf()
+)   : VisibilityJsGenerator() {
+
+    val targetsSelector: String
+        get() = targetsCss.joinToString()
 
     companion object {
         private const val prefix = "vis-$GENCORE"
@@ -43,14 +49,16 @@ class MyVisibilityJsGenerator (
         )
 
     fun moveTargetsToBodyJS() =
-        FunctionJS(code = """
+        FunctionJS(
+            code = """
             document.querySelectorAll(${targetsSelector.vq()}).forEach(
-                ${FunctionJS("","e", code =
-                    "document.querySelector(${"body".vq()}).appendChild(e);"
-                )}
+                ${FunctionJS(
+                "", "e", code =
+                "document.querySelector(${"body".vq()}).appendChild(e);"
+            )}
             );
         """
-    )
+        )
 
     /**
      * Makes an opportunity to styling each selected element.
@@ -59,42 +67,53 @@ class MyVisibilityJsGenerator (
      * Otherwise sets "<prefix>-target-<selector_index>-<found_index>"
      */
     fun markupTargetsJS() =
-        FunctionJS(code = """
+        FunctionJS(
+            code = """
             ${targetsSelector.vq()}.split(',').forEach(
-                ${FunctionJS(args = "selector, i", code = """
+                ${FunctionJS(
+                args = "selector, i", code = """
                     let targets = document.querySelectorAll(selector);
                     if (targets.length === 1) {
                         targets[0].classList.add(${CSS_TARGET.vq()});
                         targets[0].classList.add([${CSS_TARGET.vq()}, i].join('-'));
                     } else {
                         targets.forEach(
-                            ${FunctionJS(args = "e, j", code = """
+                            ${FunctionJS(
+                    args = "e, j", code = """
                                 e.classList.add(${CSS_TARGET.vq()});
                                 e.classList.add([${CSS_TARGET.vq()}, i].join('-'));
                                 e.classList.add([${CSS_TARGET.vq()}, i, j].join('-'));
-                            """)}
+                            """
+                )}
                         );
                     }
-                """)}
+                """
+            )}
             );
         """
-    )
+        )
 
     fun target(index: Int, nested: Int? = null) = ".$CSS_TARGET-$index${if (nested != null) "-$nested" else ""}"
 
-    fun showTargetsJS() = removeClassJS(".$CSS_TARGET", CSS_HIDE)
+    fun showTargetsJS() = removeClassJS(".$CSS_TARGET",
+        CSS_HIDE
+    )
 
-    fun hideBodyChildrenJS() = addClassJS("body >*", CSS_HIDE)
+    fun hideBodyChildrenJS() = addClassJS("body >*",
+        CSS_HIDE
+    )
 
     fun commonClassTargetsJS() =
-        FunctionJS(code = """
+        FunctionJS(
+            code = """
             document.querySelectorAll(${".$CSS_TARGET".vq()}).forEach(
-                ${FunctionJS(args = "e", code = 
-                    "e.classList.add(${CSS_TARGET.vq()});"
-                )}
+                ${FunctionJS(
+                args = "e", code =
+                "e.classList.add(${CSS_TARGET.vq()});"
+            )}
             );
         """
-    )
+        )
 
     fun commonCssJS() : FunctionJS =
         injectElementJS("head",

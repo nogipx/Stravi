@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_sheet_round">12dp</dimen>
+    <dimen name="peek_height">50dp</dimen>
+    <dimen name="peek_head_height">42dp</dimen>
+    <dimen name="max_height_bottom_sheet_content">400dp</dimen>
+    <dimen name="height_progress_bar_loading_page">2dp</dimen>
+
+</resources>
