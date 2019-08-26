@@ -6,16 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.webkit.URLUtil
-import android.webkit.WebView
-import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.nogipx.stravi.R
@@ -23,9 +18,11 @@ import com.nogipx.stravi.browser.navigation.ControlWebViewFragment
 import com.nogipx.stravi.browser.navigation.ExtensionsListFragment
 import com.nogipx.stravi.browser.navigation.SettingsWebViewFragment
 import com.nogipx.stravi.browser.navigation.WebExtensionPreferenceFragment
-import com.nogipx.stravi.models.LastOpenedTab
-import com.nogipx.stravi.models.WebExtension
-import com.nogipx.stravi.models.WebTab
+import com.nogipx.stravi.models.datatypes.LastOpenedTab
+import com.nogipx.stravi.models.datatypes.WebExtension
+import com.nogipx.stravi.models.datatypes.WebTab
+import kotlinx.android.synthetic.main.activity_web_browser.*
+import kotlinx.android.synthetic.main.bottomsheet_web_browser.*
 import java.net.URL
 
 
@@ -33,22 +30,9 @@ class WebBrowserActivity
     : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener {
 
-    // Web view
-    private lateinit var mWebView: WebView
-    private lateinit var mProgressBar: ProgressBar
+    private lateinit var mBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var mWebViewClient: MyWebViewClient
     private lateinit var mChromeClient: MyChromeClient
-    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
-
-
-    // Bottom sheet
-    private lateinit var mBottomSheet: View
-    private lateinit var mBottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var mBottomNavigation: BottomNavigationView
-
-    private lateinit var mPeek: ViewGroup
-    private lateinit var mPeekImage: ImageView
-    private lateinit var mShadowBackground: ViewGroup
 
 
     // Navigation fragments
@@ -79,6 +63,9 @@ class WebBrowserActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_browser)
 
+        mWebViewClient = MyWebViewClient()
+        mChromeClient = MyChromeClient(browser_progress_bar)
+
         mActiveTab = LastOpenedTab()
             .getUuid(applicationContext)
             .peekTab(applicationContext)
@@ -95,7 +82,7 @@ class WebBrowserActivity
         setupBottomSheet()
         setupWebView(mActiveTab)
 
-        mBottomNavigation.selectedItemId = R.id.nav_browser
+        browser_sheet_navigation.selectedItemId = R.id.nav_browser
 
     }
 
@@ -109,7 +96,7 @@ class WebBrowserActivity
             mBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED ->
                 hideBottomSheet()
 
-            mWebView.canGoBack() -> mWebView.goBack()
+            browser.canGoBack() -> browser.goBack()
 
             else -> super.onBackPressed()
         }
@@ -135,7 +122,7 @@ class WebBrowserActivity
         if (secondLastEntry != null && secondLastEntry.name != null) {
 
             val itemId = (secondLastEntry.name as String).toInt()
-            mBottomNavigation.selectedItemId = itemId
+            browser_sheet_navigation.selectedItemId = itemId
             Log.d(TAG, "Back to $itemId stack entry. BackStack: ${secondLastEntry.id}")
         }
     }
@@ -193,18 +180,11 @@ class WebBrowserActivity
 
     private fun setupBottomSheet() {
 
-        // Find views
-        mBottomSheet = findViewById(R.id.browser_bottom_sheet)
-        mPeek = findViewById(R.id.browser_peek_background)
-        mPeekImage = findViewById(R.id.browser_peek_image)
-        mShadowBackground = findViewById(R.id.shadow_background)
-        mBottomNavigation = findViewById(R.id.browser_sheet_navigation)
-
         // Set defaults
-        mPeek.background.alpha = 0
-        mBottomNavigation.setOnNavigationItemSelectedListener(this)
+//        browser_peek.background.alpha = 0
+        browser_sheet_navigation.setOnNavigationItemSelectedListener(this)
 
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet)
+        mBottomSheetBehavior = BottomSheetBehavior.from(browser_bottom_sheet)
         mBottomSheetBehavior.setBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -216,55 +196,50 @@ class WebBrowserActivity
                 }
 
                 override fun onSlide(p0: View, p1: Float) {
-                    mPeek.background.alpha = (p1 * 255).toInt()
-                    mPeekImage.rotation = 180 * p1
-                    mShadowBackground.alpha = p1 / 2
+//                    browser_peek.background.alpha = (p1 * 255).toInt()
+                    browser_peek_image.rotation = 180 * p1
+                    shadow_background.alpha = p1 / 2
 
-                    if (mShadowBackground.alpha == 0.toFloat())
-                        mShadowBackground.visibility = View.GONE
+                    if (shadow_background.alpha == 0.toFloat())
+                        shadow_background.visibility = View.GONE
                     else
-                        mShadowBackground.visibility = View.VISIBLE
+                        shadow_background.visibility = View.VISIBLE
                 }
             }
         )
 
-        mShadowBackground.setOnClickListener { hideBottomSheet() }
+        shadow_background.setOnClickListener { hideBottomSheet() }
 
     }
 
     fun hideBottomSheet() {
 
         hideKeyboard(mWebControlFragment.mUrlInput)
-        mWebControlFragment.setUrl(mWebView.url)
+        mWebControlFragment.setUrl(browser.url)
         mBottomSheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED
 
         // Add default selection
-        mBottomNavigation.selectedItemId = R.id.nav_browser
+        browser_sheet_navigation.selectedItemId = R.id.nav_browser
     }
 
     private fun setupWebView(initialTab: WebTab = WebTab()) {
 
-        mWebView = findViewById(R.id.browser)
-        mProgressBar = findViewById(R.id.browser_progress_bar)
-        mSwipeRefreshLayout = findViewById(R.id.browser_swipe_refresh)
+        browser_swipe_refresh.setOnRefreshListener(mWebViewClient)
 
-        mWebViewClient = MyWebViewClient()
-        mChromeClient = MyChromeClient(mProgressBar)
 
-        mSwipeRefreshLayout.setOnRefreshListener(mWebViewClient)
+
         mWebViewClient.onUrlLoadingCallback = { url ->
             hideBottomSheet()
             openPage(mActiveTab, url)
         }
 
         mWebViewClient.onRefreshCallback = {
-            mSwipeRefreshLayout.isRefreshing = true
+            browser_swipe_refresh.isRefreshing = true
             openTab(mActiveTab)
-            mSwipeRefreshLayout.isRefreshing = false
         }
 
 
-        with(mWebView.settings) {
+        with(browser.settings) {
 
             setAppCachePath(getDir("webview_cache", 0).path)
             setAppCacheEnabled(true)
@@ -275,7 +250,7 @@ class WebBrowserActivity
             displayZoomControls = false
         }
 
-        with(mWebView) {
+        with(browser) {
 
             webViewClient = mWebViewClient
             webChromeClient = mChromeClient
@@ -314,9 +289,9 @@ class WebBrowserActivity
             mWebViewClient.enqueueFunctionCall(extension.generateJs())
 
 
-        mWebView.loadUrl(url, mapOf("Content-Security-Policy" to "upgrade-insecure-requests"))
+        browser.loadUrl(url, mapOf("Content-Security-Policy" to "upgrade-insecure-requests"))
 
-        mActiveTab = updateTab(tab, URL(mWebView.url), mWebView.title)
+        mActiveTab = updateTab(tab, URL(browser.url), browser.title)
         LastOpenedTab(tab.uuid).save(applicationContext)
 
         Log.v(TAG, "Save tab '${tab.title}' as last opened tab")
