@@ -1,43 +1,62 @@
 package com.nogipx.stravi.browser.navigation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.webkit.URLUtil
 import androidx.fragment.app.Fragment
-import com.google.android.material.textfield.TextInputEditText
+import androidx.lifecycle.ViewModelProviders
 import com.nogipx.stravi.R
+import com.nogipx.stravi.browser.viewmodels.WebTabViewModel
+import kotlinx.android.synthetic.main.fragment_controls_web_browser.*
+import kotlinx.android.synthetic.main.fragment_controls_web_browser.view.*
+import java.net.URL
 
 class ControlWebViewFragment : Fragment() {
 
-    lateinit var mUrlInput: TextInputEditText
+    private lateinit var model: WebTabViewModel
 
-
-    var onOpenPage: (t: String) -> String = { "" }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_controls_web_browser, container, false)
+        model = ViewModelProviders.of(activity!!)[WebTabViewModel::class.java]
 
-        mUrlInput = view.findViewById(R.id.webControl_inputUrl)
-
-        mUrlInput.background = null
-
-
-        mUrlInput.onFocusChangeListener = View.OnFocusChangeListener { v, focused ->
+        view.webControl_inputUrl.onFocusChangeListener = View.OnFocusChangeListener { v, focused ->
             if (focused)
-                mUrlInput.setSelection(0, mUrlInput.length())
+                webControl_inputUrl.selectAll()
         }
 
+        view.webControl_inputUrl.setOnEditorActionListener { textView, _, _ ->
+            val text = textView.text.toString()
 
-        mUrlInput.setOnEditorActionListener { textView, _, _ ->
-            if (textView.text.isNotEmpty())
-                onOpenPage(textView.text.toString())
-
+            if (text.isNotEmpty() && URLUtil.isValidUrl(text)) {
+                webControl_inputUrl.setText(text)
+                showKeyboard(view = view.webControl_inputUrl, show = false)
+                model.openUrl(URL(text))
+            }
             true
         }
 
         return view
     }
 
-    fun setUrl(text: String) = mUrlInput.setText(text)
+    private fun showKeyboard(
+        context: Context = activity!!,
+        view: View = webControl_inputUrl,
+        show: Boolean = true) {
+
+        val keyboard = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        when {
+            show && !keyboard.isActive ->
+                keyboard.showSoftInput(view, 0)
+
+            !show && keyboard.isActive ->
+                keyboard.hideSoftInputFromWindow(view.applicationWindowToken, 0)
+        }
+
+    }
 }

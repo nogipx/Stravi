@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.preference.*
 import com.nogipx.stravi.R
-import com.nogipx.stravi.models.WebExtension
+import com.nogipx.stravi.gateways.internal_storage.datatypes.WebExtension
 
 class WebExtensionPreferenceFragment(
-    var extension: WebExtension = WebExtension())
+    var extension: WebExtension = WebExtension()
+)
     : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener{
 
     lateinit var mIsActive: SwitchPreference

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/main_bottom_actions"
+            app:startDestination="@id/controlWebViewFragment">
+
+    <fragment
+        android:id="@+id/controlWebViewFragment"
+        android:name="com.nogipx.stravi.browser.navigation.ControlWebViewFragment"
+        android:label="ControlWebViewFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsWebViewFragment"
+        android:name="com.nogipx.stravi.browser.navigation.SettingsWebViewFragment"
+        android:label="SettingsWebViewFragment"/>
+
+    <fragment
+        android:id="@+id/webExtensionPreferenceFragment"
+        android:name="com.nogipx.stravi.browser.navigation.WebExtensionPreferenceFragment"
+        android:label="WebExtensionPreferenceFragment"/>
+
+</navigation>

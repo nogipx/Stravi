@@ -1,4 +1,4 @@
-package com.nogipx.stravi.models
+package com.nogipx.stravi.gateways.internal_storage.datatypes
 
 import android.content.Context
 import com.google.gson.annotations.Expose

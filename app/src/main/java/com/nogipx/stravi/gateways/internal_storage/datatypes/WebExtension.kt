@@ -1,8 +1,9 @@
-package com.nogipx.stravi.models
+package com.nogipx.stravi.gateways.internal_storage.datatypes
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.annotations.Expose
-import com.nogipx.stravi.browser.MyVisibilityJsGenerator
+import com.nogipx.stravi.browser.settings.MyVisibilityJsGenerator
 import com.nogipx.stravi.jsgenerator.FunctionJS
 
 
@@ -25,6 +26,17 @@ data class WebExtension(
             generator.generationChain
 
         } else listOf(FunctionJS())
+    }
+
+    fun extensionsByHost(context: Context, host: String) : List<WebExtension> {
+        val extensions = WebExtension()
+            .getAll<WebExtension>(context)
+            .filter { it.host == host }
+
+        return if (extensions.isNotEmpty())
+            extensions
+        else
+            listOf(WebExtension())
     }
 
     override fun toString(): String = """

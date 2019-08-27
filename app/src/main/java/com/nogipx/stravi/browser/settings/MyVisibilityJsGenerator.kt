@@ -1,4 +1,4 @@
-package com.nogipx.stravi.browser
+package com.nogipx.stravi.browser.settings
 
 import com.nogipx.stravi.jsgenerator.FunctionJS
 import com.nogipx.stravi.jsgenerator.VisibilityJsGenerator

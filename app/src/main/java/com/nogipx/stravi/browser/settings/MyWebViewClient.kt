@@ -1,4 +1,4 @@
-package com.nogipx.stravi.browser
+package com.nogipx.stravi.browser.settings
 
 import android.graphics.Bitmap
 import android.util.Log

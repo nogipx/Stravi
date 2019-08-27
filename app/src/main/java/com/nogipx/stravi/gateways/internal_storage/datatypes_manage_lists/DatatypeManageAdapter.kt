@@ -1,4 +1,4 @@
-package com.nogipx.stravi.common
+package com.nogipx.stravi.gateways.internal_storage.datatypes_manage_lists
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,11 +12,12 @@ import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.nogipx.stravi.R
-import com.nogipx.stravi.models.InternalStorage
+import com.nogipx.stravi.gateways.internal_storage.datatypes.InternalStorage
+import kotlinx.android.synthetic.main.viewholder_internal_datatype.view.*
 
-open class ModelManageAdapter(
+open class DatatypeManageAdapter(
     protected val defaultItems: List<InternalStorage>
-)   : RecyclerView.Adapter<ModelManageAdapter.ModelViewHolder>(){
+)   : RecyclerView.Adapter<DatatypeManageAdapter.DatatypeViewHolder>(){
 
     var activeUuid: String = ""
     var mTracker: SelectionTracker<String>? = null
@@ -25,17 +26,19 @@ open class ModelManageAdapter(
     var selectedItem: InternalStorage? = null
 
     companion object {
-        const val TAG = "ModelManageAdapter"
+        const val TAG = "InternalDatatypeManager"
     }
 
     override fun getItemCount(): Int = activeItems.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_web_extension, parent, false)
-        return ModelViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatatypeViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_internal_datatype, parent, false)
+        return DatatypeViewHolder(
+            view
+        )
     }
 
-    override fun onBindViewHolder(holder: ModelViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DatatypeViewHolder, position: Int) {
         if (activeItems.isEmpty()) return
 
         val item = activeItems[position]
@@ -45,7 +48,7 @@ open class ModelManageAdapter(
             holder.setActivation(isActivated)
         }
 
-        // Change selection on item click
+        // TabState selection on item click
         holder.view.setOnClickListener {
             mTracker?.select(item.uuid)
             selectedItem = activeItems[position]
@@ -53,13 +56,13 @@ open class ModelManageAdapter(
     }
 
 
-    open class ModelViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.extension_name)
-        val domain: TextView = view.findViewById(R.id.extension_domain)
-        val selectionIcon: ImageView = view.findViewById(R.id.extension_selectionIcon)
+    open class DatatypeViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val primaryText: TextView = view.extension_name
+        val extraText: TextView = view.extension_domain
+        private val selectionIcon: ImageView = view.extension_selectionIcon
 
 
-        fun getItemDetails(listAdapter: ModelManageAdapter) : ItemDetailsLookup.ItemDetails<String> =
+        fun getItemDetails(listAdapter: DatatypeManageAdapter) : ItemDetailsLookup.ItemDetails<String> =
            object : ItemDetailsLookup.ItemDetails<String>() {
                override fun getSelectionKey(): String? =
                    listAdapter.activeItems[layoutPosition].uuid
@@ -83,7 +86,7 @@ open class ModelManageAdapter(
             selectionIcon.visibility = View.INVISIBLE
         }
 
-        override fun toString(): String = "Name:${name.text}"
+        override fun toString(): String = "Name:${primaryText.text}"
     }
 
     fun filter(newActiveItems: List<InternalStorage>) {
@@ -104,8 +107,8 @@ open class ModelManageAdapter(
         override fun getItemDetails(e: MotionEvent): ItemDetails<String>? {
             val view = recyclerView.findChildViewUnder(e.x, e.y)
             if (view != null) {
-                val holder = recyclerView.getChildViewHolder(view) as ModelViewHolder
-                return holder.getItemDetails(recyclerView.adapter as ModelManageAdapter)
+                val holder = recyclerView.getChildViewHolder(view) as DatatypeViewHolder
+                return holder.getItemDetails(recyclerView.adapter as DatatypeManageAdapter)
             }
             return null
         }
@@ -119,7 +122,7 @@ open class ModelManageAdapter(
         ItemKeyProvider<String>(SCOPE_MAPPED) {
 
         override fun getKey(position: Int): String? {
-            val mAdapter = recyclerView.adapter as ModelManageAdapter
+            val mAdapter = recyclerView.adapter as DatatypeManageAdapter
             val extensions = mAdapter.activeItems
             if (position > extensions.size - 1) return null
             val uuid = extensions[position].uuid
@@ -129,7 +132,7 @@ open class ModelManageAdapter(
         }
 
         override fun getPosition(key: String): Int {
-            val mAdapter = recyclerView.adapter as ModelManageAdapter
+            val mAdapter = recyclerView.adapter as DatatypeManageAdapter
             val extensions = mAdapter.activeItems
 
             for ((i, v) in extensions.withIndex()) {

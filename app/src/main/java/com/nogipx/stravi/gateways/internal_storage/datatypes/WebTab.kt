@@ -1,4 +1,4 @@
-package com.nogipx.stravi.models
+package com.nogipx.stravi.gateways.internal_storage.datatypes
 
 import android.content.Context
 import com.google.gson.annotations.Expose
@@ -19,22 +19,17 @@ data class WebTab (
 
     fun isNotEmpty() = !isEmpty()
 
-    fun extensionsByHost(context: Context, host: String) : List<WebExtension> =
-        WebExtension()
-            .getAll<WebExtension>(context)
-            .filter { it.host == host }
-
     fun attachedExtension(context: Context) : WebExtension? =
         WebExtension().get(context, extensionId)
 
-    fun relatedExtensions(context: Context) : List<WebExtension> =
-        extensionsByHost(context, URL(url).host)
-
-    fun createExtension(context: Context) : WebExtension {
-        val url = URL(url)
-        val extension = WebExtension(host = url.host)
-        extensionId = extension.uuid
-        extension.save(context)
-        return extension
-    }
+//    fun createExtension(context: Context) : WebExtension {
+//        return if (url.isNotEmpty()) {
+//            val url = URL(url)
+//            val extension = WebExtension(host = url.host)
+//            extension.save(context)
+//            extensionId = extension.uuid
+//            extension
+//
+//        } else WebExtension()
+//    }
 }

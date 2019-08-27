@@ -1,4 +1,4 @@
-package com.nogipx.stravi.models
+package com.nogipx.stravi.utils
 
 import android.content.Context
 import android.util.Log

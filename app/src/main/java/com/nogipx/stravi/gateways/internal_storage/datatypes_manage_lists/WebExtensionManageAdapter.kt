@@ -1,20 +1,19 @@
-package com.nogipx.stravi.web_extension
+package com.nogipx.stravi.gateways.internal_storage.datatypes_manage_lists
 
-import com.nogipx.stravi.common.ModelManageAdapter
-import com.nogipx.stravi.models.WebExtension
+import com.nogipx.stravi.gateways.internal_storage.datatypes.WebExtension
 
 class WebExtensionManageAdapter(
     var extensions: List<WebExtension>
-)   : ModelManageAdapter(extensions) {
+)   : DatatypeManageAdapter(extensions) {
 
-    override fun onBindViewHolder(holder: ModelViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DatatypeViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
 
         val extension = extensions[position]
 
         holder.apply {
-            name.text = extension.name
-            domain.text = extension.host
+            primaryText.text = extension.name
+            extraText.text = extension.host
         }
     }
 

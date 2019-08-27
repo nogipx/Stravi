@@ -55,7 +55,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/browser_sheet_navigation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+            <fragment
+                android:id="@+id/browser_sheet_fragment_nav_host"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                app:navGraph="@navigation/main_bottom_actions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost="true"/>
+
+        </FrameLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/browser_sheet_navigation"

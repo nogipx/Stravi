@@ -1,10 +1,11 @@
-package com.nogipx.stravi.models
+package com.nogipx.stravi.gateways.internal_storage.datatypes
 
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
+import com.nogipx.stravi.utils.InternalFileManager
 import java.io.File
 import java.util.*
 

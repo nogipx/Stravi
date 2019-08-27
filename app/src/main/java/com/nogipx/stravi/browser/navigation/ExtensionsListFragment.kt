@@ -11,14 +11,14 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nogipx.stravi.R
-import com.nogipx.stravi.common.ModelManageAdapter
-import com.nogipx.stravi.models.WebExtension
-import com.nogipx.stravi.web_extension.WebExtensionManageAdapter
+import com.nogipx.stravi.gateways.internal_storage.datatypes.WebExtension
+import com.nogipx.stravi.gateways.internal_storage.datatypes_manage_lists.DatatypeManageAdapter
+import com.nogipx.stravi.gateways.internal_storage.datatypes_manage_lists.WebExtensionManageAdapter
 
 class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
-    lateinit var mListAdapter: ModelManageAdapter
+    lateinit var mListAdapter: DatatypeManageAdapter
     lateinit var mTracker: SelectionTracker<String>
 
     private lateinit var extensions: List<WebExtension>
@@ -44,7 +44,8 @@ class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment()
 
 
         // Setup recycler view
-        mListAdapter = WebExtensionManageAdapter(extensions)
+        mListAdapter =
+            WebExtensionManageAdapter(extensions)
         mRecyclerView.apply {
             adapter = mListAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -55,8 +56,8 @@ class ExtensionsListFragment(private val selectedUuid: String = "") : Fragment()
         mTracker = SelectionTracker.Builder<String>(
             "extensionSelection",
             mRecyclerView,
-            ModelManageAdapter.ModelItemKeyProvider(mRecyclerView),
-            ModelManageAdapter.ModelItemDetailsLookup(mRecyclerView),
+            DatatypeManageAdapter.ModelItemKeyProvider(mRecyclerView),
+            DatatypeManageAdapter.ModelItemDetailsLookup(mRecyclerView),
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectSingleAnything()
