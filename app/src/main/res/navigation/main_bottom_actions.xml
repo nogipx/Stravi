@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/main_bottom_actions"
             app:startDestination="@id/controlWebViewFragment">
 
@@ -8,6 +9,17 @@
         android:id="@+id/controlWebViewFragment"
         android:name="com.nogipx.stravi.browser.navigation.ControlWebViewFragment"
         android:label="ControlWebViewFragment">
+        <action
+            android:id="@+id/action_controlWebViewFragment_to_webExtensionPreferenceFragment"
+            app:destination="@id/webExtensionPreferenceFragment"
+            app:launchSingleTop="true"/>
+        <action
+            android:id="@+id/action_controlWebViewFragment_to_settingsWebViewFragment"
+            app:destination="@id/settingsWebViewFragment"
+            app:launchSingleTop="true"/>
+        <action
+            android:id="@+id/action_controlWebViewFragment_to_extensionsListFragment"
+            app:destination="@id/extensionsListFragment"/>
     </fragment>
 
     <fragment
@@ -19,5 +31,10 @@
         android:id="@+id/webExtensionPreferenceFragment"
         android:name="com.nogipx.stravi.browser.navigation.WebExtensionPreferenceFragment"
         android:label="WebExtensionPreferenceFragment"/>
+    <fragment
+        android:id="@+id/extensionsListFragment"
+        android:name="com.nogipx.stravi.browser.navigation.ExtensionsListFragment"
+        android:label="fragment_extensions_list"
+        tools:layout="@layout/fragment_extensions_list"/>
 
 </navigation>

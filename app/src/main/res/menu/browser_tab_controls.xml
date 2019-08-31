@@ -4,13 +4,13 @@
     <item
         android:title="Bookmark"
         android:id="@+id/control_bookmark"
-        android:icon="@drawable/ic_star_border_black_24dp"/>
+        android:icon="@drawable/ic_star"/>
     <item
         android:title="New tab"
         android:id="@+id/control_newTab"
-        android:icon="@drawable/ic_add_black_24dp"/>
+        android:icon="@drawable/ic_add_outline"/>
     <item
         android:title="Refresh"
         android:id="@+id/control_refresh"
-        android:icon="@drawable/ic_refresh_black_24dp"/>
+        android:icon="@drawable/ic_refresh"/>
 </menu>

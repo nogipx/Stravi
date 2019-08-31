@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/browser_controls_extension"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/sub_navigation_height"
+    android:gravity="center"
+    android:background="@android:color/white"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:layout_constraintTop_toBottomOf="@id/webControl_inputUrl"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <ImageView
+        android:id="@+id/control_extension_settings"
+        android:src="@drawable/ic_controls"
+        style="@style/nav_image_btn"
+        android:layout_width="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/control_extension_js"
+        android:src="@drawable/ic_js_brang_outline"
+        style="@style/nav_image_btn"/>
+
+    <ImageView
+        android:id="@+id/control_extension_css"
+        android:src="@drawable/ic_css_badge"
+        style="@style/nav_image_btn"/>
+
+    <ImageView
+        android:id="@+id/control_extension_toggleActive"
+        android:src="@drawable/ic_power"
+        style="@style/nav_image_btn"/>
+
+</LinearLayout>
