@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import android.webkit.URLUtil
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nogipx.stravi.gateways.internal_storage.datatypes.LastOpenedTab
 import com.nogipx.stravi.gateways.internal_storage.datatypes.WebExtension
@@ -12,46 +13,28 @@ import java.net.URL
 
 class WebTabViewModel (application: Application) : AndroidViewModel(application) {
 
-    var mTab: MutableLiveData<WebTab> = MutableLiveData()
-    var mExtension: MutableLiveData<WebExtension> = MutableLiveData()
+    private val _mTab: MutableLiveData<WebTab> = MutableLiveData()
+    val mTab: LiveData<WebTab> get() = _mTab
 
-    var isActiveNavigation: MutableLiveData<Boolean> = MutableLiveData()
+    private val _mExtension: MutableLiveData<WebExtension> = MutableLiveData()
+    val mExtension: LiveData<WebExtension> get() = _mExtension
+
+    private val _isActiveNavigation: MutableLiveData<Boolean> = MutableLiveData()
+    val isActiveNavigation: LiveData<Boolean> get() = _isActiveNavigation
+
 
     companion object {
         const val TAG = "WebTabViewModel"
     }
 
-    var state = TabState.INITIAL
-
-    enum class TabState {
-        INITIAL, RESTORE_TAB, OPEN_NEW_TAB, OPEN_URL, UPDATE_EXTENSION
-    }
-
-
-    fun openTab(uuid: String) : WebTab {
-        state = TabState.OPEN_URL
-        val tab = WebTab().get<WebTab>(getApplication(), uuid)!!
-
-        Log.v(TAG, "Open tab '${tab.title}'")
-        mTab.value = tab
-
-        return tab
-    }
-
-    fun openTab(tab: WebTab) {
-        state = TabState.OPEN_URL
-        mTab.value = tab
-    }
 
     /**
      * Creates new WebTab without WebExtension
      * Sets last change as 'create_tab'
      */
     fun openNewTab() : WebTab {
-        state = TabState.OPEN_NEW_TAB
         val tab = WebTab()
-
-        mTab.value = tab
+        _mTab.value = tab
 
         return tab
     }
@@ -61,15 +44,12 @@ class WebTabViewModel (application: Application) : AndroidViewModel(application)
      * Finds last (for now) WebExtension by host
      * and attaches it to the WebTab
      *
-     * Firstly checks if host has changed
-     * then finds last (for now) extension candidate.
-     *
-     * If WebExtension candidate is not empty
-     * then attaches it to WebTab
+     * Finds list of extension candidates.
+     * If list is not empty
+     * then attaches first candidate to WebTab
      * else attaches null
      */
-    fun openUrl(url: URL, title: String = "") : WebTab {
-        state = TabState.OPEN_URL
+    fun openUrl(url: URL) : WebTab {
 
         val tab = mTab.value!!
 
@@ -78,40 +58,98 @@ class WebTabViewModel (application: Application) : AndroidViewModel(application)
                 URL(tab.url)
             else null
 
-        if (tabUrl != null && url.host != tabUrl.host) {
 
-            val extensionCandidate = WebExtension().extensionsByHost(getApplication(), url.host).last()
-            Log.d(TAG, "Open url extension candidate: " +
-                    "IsEmpty -> ${extensionCandidate.isEmpty()}: " +
-                    "$extensionCandidate")
+        var extension: WebExtension? = null
+        if (tabUrl != null) {
 
-            if (extensionCandidate.isNotEmpty())
-                mExtension.value = extensionCandidate
-            else
-                mExtension.value = null
+            val extensionCandidates = WebExtension().extensionsByHost(getApplication(), url.host)
 
+            if (extensionCandidates.isNotEmpty()) {
+                val candidate = extensionCandidates.first()
+
+                Log.v(TAG, "Open url extension candidate: " +
+                            "IsEmpty -> ${candidate.isEmpty()}: " +
+                            "$candidate"
+                )
+
+                if (candidate.isNotEmpty())
+                    extension = candidate
+
+            } else Log.e(TAG, "There is not an extension for host '${url.host}'")
         }
 
         tab.url = url.toString()
-        tab.title = title
+        tab.title = url.host
 
-        mTab.value = tab
+        tab.save(getApplication())
+        setLastOpenedTab(tab)
+        _mTab.value = tab
+        _mExtension.value = extension
+
         return tab
+    }
+
+    fun refreshTab() {
+        mTab.value?.let {
+            openUrl(URL(it.url))
+        }
+    }
+
+    fun setTitle(title: String) {
+        val tab = mTab.value
+
+        tab?.apply {
+            this.title = title
+            save(getApplication())
+        }
+
+        _mTab.value = tab
     }
 
     fun getLastOpenedTab() : WebTab {
         val tab = LastOpenedTab().getUuid(getApplication()).peekTab(getApplication())
         Log.d(TAG, "Peek last opened tab")
-        mTab.value = tab
         return tab
     }
 
-    fun attachExtension(uuid: String) {
+    fun setLastOpenedTab(tab: WebTab) =
+        LastOpenedTab(tab.uuid).save(getApplication())
 
+    fun toggleExtensionActive() {
+        val extension = mExtension.value
+
+        _mExtension.value = extension?.apply {
+            active = !active
+            save(getApplication())
+        }
     }
 
-    fun showNavigation() { isActiveNavigation.value = true }
-    fun hideNavigation() { isActiveNavigation.value = false }
+    fun getOrCreateExtension() : WebExtension? =
+        mExtension.value ?: createExtension().apply { _mExtension.value = this }
+
+
+    private fun createExtension() : WebExtension? =
+        mTab.value?.run {
+            val url = this.url
+            if (!URLUtil.isValidUrl(url)) {
+                Log.e(TAG, "Cannot create extension for invalid url")
+                return null
+            }
+            val host = URL(mTab.value?.url).host
+            val extension = WebExtension(
+                active = false,
+                name = url,
+                host = host
+            )
+            extension.save(getApplication())
+            return extension
+        }
+
+    fun setExtension(extension: WebExtension) { _mExtension.value = extension }
+    fun setTab(tab: WebTab) { _mTab.value = tab }
+
+    fun showNavigation() { _isActiveNavigation.value = true }
+    fun hideNavigation() { _isActiveNavigation.value = false }
 
 
 }

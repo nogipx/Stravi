@@ -2,18 +2,13 @@ package com.nogipx.stravi.browser.navigation
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.widget.NestedScrollView
 import androidx.preference.*
 import com.nogipx.stravi.R
 import com.nogipx.stravi.gateways.internal_storage.datatypes.WebExtension
 
 class WebExtensionPreferenceFragment(
     var extension: WebExtension = WebExtension()
-)
-    : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener{
+)   : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener{
 
     lateinit var mIsActive: SwitchPreference
     lateinit var mName: EditTextPreference
@@ -26,19 +21,6 @@ class WebExtensionPreferenceFragment(
     companion object {
         const val TAG = "ExtensionPrefFragment"
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-
-        val scrollView = NestedScrollView(context!!)
-        scrollView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT)
-        scrollView.addView(view)
-
-        return scrollView
-    }
-
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preference_extension, rootKey)

@@ -37,7 +37,7 @@ class MyWebViewClient : WebViewClient(), SwipeRefreshLayout.OnRefreshListener {
             Log.d(TAG, "Invoke #$i: \n${function.iife()}")
 
             view!!.evaluateJavascript(function.iife()) {
-                Log.d(TAG, it)
+                Log.d(TAG, "Evaluated: $function")
             }
 
             invokeQueue.remove()

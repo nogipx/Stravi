@@ -16,7 +16,7 @@ data class WebExtension(
     : InternalStorage("extensions") {
 
 
-    fun generateJs() : List<FunctionJS> {
+    fun generatePayload() : List<FunctionJS> {
         return if (active) {
 
             val generator = MyVisibilityJsGenerator(targets.toMutableList())
@@ -28,22 +28,16 @@ data class WebExtension(
         } else listOf(FunctionJS())
     }
 
-    fun extensionsByHost(context: Context, host: String) : List<WebExtension> {
-        val extensions = WebExtension()
+    fun extensionsByHost(context: Context, host: String) : List<WebExtension> =
+        WebExtension()
             .getAll<WebExtension>(context)
             .filter { it.host == host }
 
-        return if (extensions.isNotEmpty())
-            extensions
-        else
-            listOf(WebExtension())
-    }
-
     override fun toString(): String = """
-        ${className()}: name:$name, host:$host, uuid:$uuid)
+        ${className()}: name:$name, host:$host, uuid:${uuid.take(8)})
     """.trimIndent()
 
-    fun isEmpty() = name.isEmpty() && host.isEmpty()
+    fun isEmpty() = host.isEmpty()
 
     fun isNotEmpty() = !isEmpty()
 }

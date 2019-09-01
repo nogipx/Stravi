@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -16,11 +17,10 @@ import com.nogipx.stravi.R
 import com.nogipx.stravi.browser.settings.MyChromeClient
 import com.nogipx.stravi.browser.settings.MyWebViewClient
 import com.nogipx.stravi.browser.viewmodels.WebTabViewModel
-import com.nogipx.stravi.gateways.internal_storage.datatypes.LastOpenedTab
 import com.nogipx.stravi.gateways.internal_storage.datatypes.WebTab
 import kotlinx.android.synthetic.main.activity_web_browser.*
 import kotlinx.android.synthetic.main.bottomsheet_web_browser.*
-import java.util.*
+import java.net.URL
 
 
 class WebBrowserActivity
@@ -35,8 +35,7 @@ class WebBrowserActivity
     private lateinit var mMainNavigation: NavController
 
     // Data
-    private lateinit var mTabViewModel: WebTabViewModel
-    private val navigationStack: ArrayDeque<Int> = ArrayDeque()
+    private lateinit var model: WebTabViewModel
 
     companion object {
         private const val TAG = "WebBrowserActivity"
@@ -46,64 +45,68 @@ class WebBrowserActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_browser)
-
         mMainNavigation = findNavController(R.id.browser_sheet_fragment_nav_host)
         browser_sheet_navigation.setOnNavigationItemSelectedListener(this)
 
         mWebViewClient = MyWebViewClient()
         mChromeClient = MyChromeClient(browser_progress_bar)
-        mTabViewModel = ViewModelProviders.of(this).get(WebTabViewModel::class.java)
+        model = ViewModelProviders.of(this)[WebTabViewModel::class.java]
 
 
-        mTabViewModel.openTab(mTabViewModel.getLastOpenedTab())
-        mTabViewModel.hideNavigation()
+        val lastTab = model.getLastOpenedTab()
 
-        mTabViewModel.mTab.observe(this, Observer { tab ->
+        model.setTab(lastTab)
+        model.openUrl(URL(lastTab.url))
+        model.hideNavigation()
 
-            when(mTabViewModel.state) {
+        setupModelObservers(model)
+        setupBottomSheet()
+        setupWebView(model.getLastOpenedTab())
 
-                WebTabViewModel.TabState.OPEN_URL -> {
-                    // Generate JS
-                    val extension = tab.attachedExtension(applicationContext)
-                    if (extension != null)
-                        mWebViewClient.enqueueFunctionCall(extension.generateJs())
+        browser_sheet_navigation.selectedItemId = R.id.nav_browser
+    }
 
-                    // Load page
-                    browser.loadUrl(tab.url, mapOf("Content-Security-Policy" to "upgrade-insecure-requests"))
-                    browser_swipe_refresh.isRefreshing = false
+    private fun setupModelObservers(model: WebTabViewModel) {
 
-                    // Save tab
-                    Log.v(TAG, "Save tab '${tab.title}' as last opened tab")
-                    LastOpenedTab(tab.uuid).save(applicationContext)
+        model.mTab.observe(this, Observer { tab ->
 
-                }
-
-                else -> {}
+            // Generate JS
+            val extension = model.mExtension.value
+            if (extension != null && extension.active) {
+                mWebViewClient.enqueueFunctionCall(extension.generatePayload())
+                Log.d(TAG, "Proceed extension $extension because it's active")
             }
+
+            model.hideNavigation()
+
+            // Load page
+            browser.loadUrl(tab.url, mapOf("Content-Security-Policy" to "upgrade-insecure-requests"))
+            browser_swipe_refresh.isRefreshing = false
+
+            // Save tab
+            Log.v(TAG, "Save tab '${tab.title}' as last opened tab")
+            model.setLastOpenedTab(tab)
+
         })
 
-
-        mTabViewModel.isActiveNavigation.observe(this, Observer { isActive ->
+        model.isActiveNavigation.observe(this, Observer { isActive ->
             if (isActive) {
                 mBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
             } else {
                 mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
+                val options = NavOptions.Builder()
+                options.setLaunchSingleTop(true)
+                mMainNavigation.navigate(R.id.controlWebViewFragment)
             }
         })
-
-        setupBottomSheet()
-        setupWebView(mTabViewModel.getLastOpenedTab())
-
-        browser_sheet_navigation.selectedItemId = R.id.nav_browser
-
     }
 
     override fun onBackPressed() {
         when {
             mBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
-
+                val options = NavOptions.Builder()
+                options.setLaunchSingleTop(true)
                 if (!mMainNavigation.navigateUp())
                     mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -116,8 +119,8 @@ class WebBrowserActivity
 
     private fun setupBottomSheet() {
 
-        browser_peek_background.background.alpha = 0
-        shadow_background.setOnClickListener { mTabViewModel.hideNavigation() }
+        browser_peek.background.alpha = 0
+        shadow_background.setOnClickListener { model.hideNavigation() }
 
 
         mBottomSheetBehavior = BottomSheetBehavior.from(browser_bottom_sheet)
@@ -127,13 +130,13 @@ class WebBrowserActivity
                 override fun onStateChanged(p0: View, p1: Int) {
                     if (p1 == BottomSheetBehavior.STATE_COLLAPSED) {
                         Log.d(TAG, "Bottom sheet collapsed")
-                        mTabViewModel.hideNavigation()
+                        model.hideNavigation()
                     }
                 }
 
                 override fun onSlide(p0: View, p1: Float) {
-                    browser_peek_background.background.alpha = (p1 * 255).toInt()
-                    browser_peek_image.rotation = 180 * p1
+                    browser_peek.background.alpha = (p1 * 255).toInt()
+//                    browser_peek_image.rotation = 180 * p1
                     shadow_background.alpha = p1 / 2
 
                     if (shadow_background.alpha == 0.toFloat())
@@ -148,15 +151,17 @@ class WebBrowserActivity
     private fun setupWebView(initialTab: WebTab = WebTab()) {
 
         mWebViewClient.onUrlLoadingCallback = { url ->
-            mTabViewModel.hideNavigation()
+            // TODO Issue: not updates hyper link forwards
+            model.openUrl(URL(url))
         }
 
         mWebViewClient.onRefreshCallback = {
             browser_swipe_refresh.isRefreshing = true
-            mTabViewModel.openTab(initialTab)
+            val openedTab = model.mTab.value
+            if (openedTab != null) model.openUrl(URL(openedTab.url))
         }
 
-
+        browser_swipe_refresh.setColorSchemeResources(R.color.colorAccent)
         browser_swipe_refresh.setOnRefreshListener(mWebViewClient)
         with(browser.settings) {
 
@@ -184,14 +189,15 @@ class WebBrowserActivity
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId) {
-            R.id.nav_extension ->
-                mMainNavigation.navigate(R.id.webExtensionPreferenceFragment)
 
             R.id.nav_browser ->
                 mMainNavigation.navigate(R.id.controlWebViewFragment)
 
             R.id.nav_browser_settings ->
                 mMainNavigation.navigate(R.id.settingsWebViewFragment)
+
+            R.id.nav_tabs ->
+                mMainNavigation.navigate(R.id.extensionsListFragment)
         }
 
         return true
