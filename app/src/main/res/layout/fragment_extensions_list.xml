@@ -17,7 +17,8 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/extension_list_fab"
-        android:src="@drawable/ic_add_white_24dp"
+        android:src="@drawable/ic_add_round"
+        android:tint="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
