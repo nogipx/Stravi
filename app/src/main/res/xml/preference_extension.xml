@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.preference.PreferenceCategory
+        app:title="Main settings">
+
+        <androidx.preference.SwitchPreference
+            app:key="isActive"
+            app:title="Active"/>
+
+        <androidx.preference.EditTextPreference
+            app:key="name"
+            app:title="Name"/>
+
+        <androidx.preference.EditTextPreference
+            app:key="host"
+            app:title="Host"/>
+
+        <androidx.preference.EditTextPreference
+            app:key="targets"
+            app:title="Targets CSS selectors"
+            app:summary="Selectors for elements on tab which need to have access"
+            app:dialogTitle="Type each selector by comma-separator"/>
+
+        <androidx.preference.EditTextPreference
+            app:key="customCss"
+            app:title="Custom CSS"
+            app:summary="Use @target-0, @target-1, @target-x to access targets"/>
+    </androidx.preference.PreferenceCategory>
+
+
+
+    <androidx.preference.PreferenceCategory
+        app:title="Advanced">
+
+        <androidx.preference.ListPreference
+            app:key="actions"
+            app:title="Action with targets"
+            app:summary="What to do with targets after tab loaded"
+            app:entries="@array/names_actions_with_targets"
+            app:entryValues="@array/values_actions_with_targets"/>
+
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

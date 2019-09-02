@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="nav_image_btn" parent="Widget.AppCompat.ActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="background">?android:selectableItemBackground</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:tint">@color/grey600</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+
+    <style name="nav_view_flat" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="elevation">0dp</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+</resources>

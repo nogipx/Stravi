@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#B62105</color>
+    <color name="colorPrimary">#218359</color>
+    <color name="colorPrimaryDark">#085771</color>
+    <color name="colorPrimaryLight">#62A605</color>
+
+    <color name="control_default_tint">@color/grey600</color>
+</resources>

@@ -7,23 +7,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Stravi.Light"
+        android:theme="@style/Theme.Stravi"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activities.PageSettingsActivity">
-        </activity>
-        <activity
-            android:name=".activities.WebPageActivity"
+            android:name=".browser.WebBrowserActivity"
             android:keepScreenOn="true"
-            android:theme="@style/NoActionBar">
-        </activity>
-        <activity
-            android:name=".activities.PagesActivity"
+            android:theme="@style/NoActionBar.Fullscreen"
             android:configChanges="screenSize|orientation">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Browser dimens-->
+    <dimen name="height_progress_bar_loading_page">2dp</dimen>
+
+    <!--Controls dimens-->
+    <dimen name="sub_navigation_height">46dp</dimen>
+
+    <!--Bottom sheet-->
+    <dimen name="peek_height">42dp</dimen>
+    <dimen name="peek_head_height">42dp</dimen>
+    <dimen name="peek_icon_height">24dp</dimen>
+    <dimen name="bottom_sheet_round">12dp</dimen>
+    <dimen name="max_height_bottom_sheet_content">400dp</dimen>
+
+</resources>
