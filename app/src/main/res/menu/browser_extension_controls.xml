@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/control_extension_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="settings"/>
+    <item
+        android:id="@+id/control_extension_js"
+        android:icon="@drawable/ic_js_file"
+        android:title="js"/>
+    <item
+        android:id="@+id/control_extension_css"
+        android:icon="@drawable/ic_css_file"
+        android:title="css"/>
+    <item
+        android:id="@+id/control_extension_toggleActive"
+        android:icon="@drawable/ic_power"
+        android:title="toggle"/>
+
+</menu>

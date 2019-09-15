@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="names_actions_with_targets">
+        <item>Move to the "body" tag</item>
+        <item>Save parents</item>
+    </array>
+    <array name="values_actions_with_targets">
+        <item>0</item>
+        <item>1</item>
+    </array>
+</resources>

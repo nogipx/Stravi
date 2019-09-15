@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Universal Online Player</string>
+    <string name="app_name">Stravi</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="devPageName">Page name mock</string>
+    <string name="devUrl">https://somesite.com/</string>
+
+
+    <string name="pageSettings_titleMain">Main settings</string>
+    <string name="pageSettings_url">URL</string>
 </resources>
